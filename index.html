@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111116">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ENERGY$">
+<meta name="description" content="ENERGY$ — мемный трекер энергетиков и расходов">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>ENERGY$ · Telegram Mini App</title>
+<style>
+:root{color-scheme:dark;--bg:#111116;--panel:#24232D;--panel2:#302F3B;--line:#393744;--muted:#A9A5B8;--text:#F4F0FF;--accent:#A78BFA;--accent2:#C4B5FD;--deep:#17131F;--danger:#FF818A;--radius:22px}
+*{box-sizing:border-box}html{background:var(--bg);scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 85% -10%,#302548 0,transparent 40%),var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;min-height:100vh;padding:0 0 calc(94px + env(safe-area-inset-bottom))}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.app{width:min(100%,600px);margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) 17px 25px}header{display:flex;align-items:center;justify-content:space-between;margin:4px 0 22px}.brand{display:flex;align-items:center;gap:11px}.logo{width:45px;height:45px;border-radius:15px;background:linear-gradient(145deg,#C4B5FD,#8B5CF6);color:#17131F;display:grid;place-items:center;font-size:25px;font-weight:950;box-shadow:0 0 28px #A78BFA22}.brand h1{font-size:20px;letter-spacing:1.3px;margin:0;font-weight:950}.brand p{font-size:10px;color:var(--muted);margin:4px 0 0;letter-spacing:.9px}.icon-btn{background:var(--panel);color:var(--text);border:1px solid var(--line);width:42px;height:42px;border-radius:14px;font-size:18px}
+.view{display:none;animation:fade .22s ease}.view.active{display:block}@keyframes fade{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.eyebrow{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:850}.hero{background:linear-gradient(140deg,#302548,#211D2B 80%);border:1px solid #4B3D67;border-radius:26px;padding:21px;position:relative;overflow:hidden}.hero:after{content:"$";position:absolute;right:4px;top:-35px;font-size:165px;line-height:1;font-weight:950;color:#A78BFA0C;pointer-events:none}.hero-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}.pill{background:#A78BFA1C;border:1px solid #A78BFA40;border-radius:99px;padding:7px 10px;font-size:10px;color:var(--accent2);font-weight:850}.hero-total{font-size:clamp(39px,11vw,54px);font-weight:950;letter-spacing:-2px;line-height:1.1;margin:14px 0 17px;position:relative;z-index:1;overflow-wrap:anywhere}.hero-bottom{display:flex;justify-content:space-between;gap:12px;align-items:end;position:relative;z-index:1}.hero-bottom p{margin:0;font-size:11px;color:#C0B6D2}.hero-count{font-size:23px;font-weight:900;margin-top:3px}.hero-count span{font-size:11px;font-weight:700;color:#C0B6D2}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:11px 0 17px}.stat{padding:15px;background:var(--panel);border:1px solid var(--line);border-radius:19px;min-width:0}.stat .stat-icon{font-size:17px;margin-bottom:10px}.stat .value{font-size:22px;font-weight:900;letter-spacing:-.5px;overflow-wrap:anywhere}.stat .label{font-size:11px;color:var(--muted);margin-top:5px}
+.quick-add{width:100%;display:flex;align-items:center;justify-content:center;gap:9px;background:var(--accent);color:#17131F;font-weight:950;border-radius:17px;padding:16px 18px;box-shadow:0 9px 27px #A78BFA1D;transition:transform .15s,filter .15s}.quick-add:active{transform:scale(.985);filter:brightness(.94)}.plus{font-size:23px;line-height:16px}.section-head{display:flex;align-items:center;justify-content:space-between;margin:24px 1px 12px;gap:8px}.section-head h2{font-size:17px;margin:0;font-weight:900}.small-link{color:var(--accent2);background:none;padding:6px 0;font-size:12px;font-weight:850}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:21px;padding:16px}.chart-wrap{height:145px;position:relative}.chart-wrap canvas{width:100%;height:100%;display:block}.chart-caption{display:flex;justify-content:space-between;color:var(--muted);font-size:10px;margin-top:8px}.period-tabs{display:flex;gap:4px;background:#17161D;padding:4px;border-radius:12px}.period-tabs button{background:transparent;color:var(--muted);border-radius:9px;padding:7px 9px;font-size:10px;font-weight:850}.period-tabs button.active{background:var(--accent);color:var(--deep)}
+.mascot-card{display:flex;align-items:center;gap:13px;background:linear-gradient(135deg,#24232D,#1D1B25);border:1px solid #4A405E;border-radius:22px;padding:14px;margin:14px 0 18px;position:relative;overflow:hidden}.mascot{width:88px;height:112px;flex:0 0 88px;position:relative;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 7px 9px #0004);transform-origin:50% 85%;will-change:transform}
+.mascot-frame{display:block;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none;image-rendering:auto}
+.mascot-sprite{animation:idleFrames 1.8s steps(1,end) infinite}
+.mascot-card:active .mascot-sprite{transform:scale(.96)}
+
+@keyframes idleFrames{0%,100%{transform:translateY(0) rotate(-1deg) scale(1)}25%{transform:translateY(-2px) rotate(1deg) scale(1.01)}50%{transform:translateY(-4px) rotate(0deg) scale(1)}75%{transform:translateY(-1px) rotate(-2deg) scale(.99)}}
+.can-body{transform-origin:50% 50%;transition:filter .12s}.can-top,.can-face,.mouth,.arm{transition:all .12s}.can-face{transform-origin:50% 50%}
+.eye{animation:eyeBlink 5.2s steps(1,end) infinite;transform-origin:50% 50%}
+@keyframes eyeBlink{0%,91%,95%,100%{transform:scaleY(1)}92%,94%{transform:scaleY(.08)}}
+.mascot.mood-joy,.mascot.mood-laugh,.mascot.mood-dance,.mascot.mood-fail{animation:none}
+@keyframes idleFrames{0%,100%{transform:translateY(0) rotate(-1deg)}25%{transform:translateY(-2px) rotate(1deg)}50%{transform:translateY(-4px) rotate(0)}75%{transform:translateY(-1px) rotate(-2deg)}}
+@media(prefers-reduced-motion:reduce){.mascot-sprite{animation:none!important}}.can-body{position:absolute;left:16px;top:8px;width:50px;height:78px;border-radius:12px 12px 10px 10px;background:linear-gradient(90deg,#6D4AB5,#A78BFA 38%,#7956C8);border:2px solid #C4B5FD;box-shadow:inset -7px 0 0 #2B2144}.can-top{position:absolute;left:23px;top:3px;width:36px;height:8px;background:#C9C4D6;border-radius:5px;border:2px solid #7C718D}.can-face{position:absolute;left:24px;top:30px;display:flex;gap:11px}.eye{width:9px;height:12px;border-radius:50%;background:#17131F;border:1px solid #EEE7FF;position:relative}.eye:after{content:"";position:absolute;width:3px;height:3px;background:#fff;border-radius:50%;left:2px;top:2px}.mouth{position:absolute;left:33px;top:51px;width:17px;height:9px;border-bottom:3px solid #17131F;border-radius:0 0 12px 12px}.can-bolt{position:absolute;left:31px;top:62px;color:#17131F;font-weight:1000;font-size:16px}.arm{position:absolute;top:45px;width:13px;height:26px;border:4px solid #A78BFA;border-top:0;border-radius:0 0 9px 9px}.arm.left{left:7px;transform:rotate(22deg)}.arm.right{right:5px;transform:rotate(-20deg)}.mascot-copy{min-width:0;flex:1}.mascot-name{font-size:10px;color:var(--accent2);font-weight:950;letter-spacing:1.3px}.mascot-line{font-size:13px;line-height:1.45;font-weight:750;margin-top:6px}.mascot-sub{font-size:10px;color:var(--muted);margin-top:6px}.bubble-dot{position:absolute;right:12px;top:10px;width:7px;height:7px;background:#A78BFA;border-radius:50%;box-shadow:0 0 13px #A78BFA;animation:pulse 2s infinite}@keyframes pulse{50%{opacity:.35;transform:scale(.75)}}
+.history{display:flex;flex-direction:column;gap:8px}.entry{display:flex;align-items:center;gap:11px;padding:12px;background:var(--panel);border:1px solid var(--line);border-radius:17px}.can-icon{width:42px;height:45px;flex:0 0 42px;border-radius:12px;background:linear-gradient(150deg,#39304E,#191820);display:grid;place-items:center;font-size:22px}.entry-main{min-width:0;flex:1}.entry-title{font-weight:850;font-size:13px;overflow-wrap:anywhere}.entry-date{color:var(--muted);font-size:10px;margin-top:5px}.entry-price{text-align:right;font-size:14px;font-weight:900;white-space:nowrap}.entry-actions{display:flex;gap:4px;margin-top:5px;justify-content:flex-end}.entry-actions button{background:transparent;color:var(--muted);font-size:10px;padding:3px 4px}.entry-actions button.delete{color:var(--danger)}.empty{padding:25px 14px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6}.empty .big{font-size:30px;margin-bottom:8px}
+.friends-box{background:var(--panel);border:1px solid var(--line);border-radius:21px;padding:16px}.friend-form{display:grid;grid-template-columns:1fr 1fr;gap:9px}.friend-form .wide{grid-column:1/-1}.friend-form input,.friend-form textarea{width:100%;background:#191820;border:1px solid #454154;border-radius:12px;padding:12px;color:var(--text);min-height:44px}.friend-form textarea{min-height:82px;resize:vertical;font-size:11px;line-height:1.45}.friend-list{display:flex;flex-direction:column;gap:8px;margin-top:13px}.friend-row{display:flex;align-items:center;gap:10px;background:#191820;border:1px solid var(--line);border-radius:15px;padding:11px}.friend-avatar{width:38px;height:38px;border-radius:13px;background:#A78BFA1C;color:var(--accent2);display:grid;place-items:center;font-weight:950;flex-shrink:0}.friend-info{min-width:0;flex:1}.friend-name{font-size:13px;font-weight:900;overflow-wrap:anywhere}.friend-meta{font-size:10px;color:var(--muted);margin-top:4px;line-height:1.45}.friend-score{text-align:right;font-size:13px;font-weight:900;white-space:nowrap}.friend-score small{display:block;font-size:9px;color:var(--muted);font-weight:700;margin-top:4px}.friend-remove{background:transparent;color:var(--muted);padding:6px;font-size:17px}.social-note{font-size:11px;color:var(--muted);line-height:1.5;margin:11px 0 0}.friend-empty{padding:18px 8px;text-align:center;color:var(--muted);font-size:12px;line-height:1.5}.social-status{color:var(--accent2);font-size:11px;font-weight:800;line-height:1.5;margin-top:9px}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.compare-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px}.compare-card .mini{color:var(--muted);font-size:10px}.compare-card .big{font-size:19px;font-weight:900;margin-top:7px}.compare-card .sub{font-size:10px;color:var(--accent2);margin-top:5px;line-height:1.4}.report-card{background:linear-gradient(145deg,#302548,#211D2B);border:1px solid #4B3D67;border-radius:22px;padding:19px;position:relative;overflow:hidden}.report-card:after{content:"ϟ";position:absolute;right:9px;top:-20px;font-size:110px;color:#A78BFA12;font-weight:950}.report-card>*{position:relative;z-index:1}.report-title{font-size:11px;letter-spacing:1.5px;color:var(--accent2);font-weight:950}.report-amount{font-size:35px;font-weight:950;letter-spacing:-1px;margin:10px 0}.report-line{font-size:12px;color:#D4CDE2;line-height:1.5}.report-quote{margin-top:14px;padding-top:13px;border-top:1px solid #A78BFA33;font-weight:800;font-size:13px;line-height:1.45}.secondary-btn{background:#302F3B;color:var(--text);border:1px solid var(--line);border-radius:14px;padding:12px 13px;font-weight:800;font-size:12px}.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.btn-row>*{flex:1}.input-inline{width:100%;background:#191820;border:1px solid #454154;border-radius:12px;padding:11px;color:var(--text);min-height:43px}.field{display:block;margin-bottom:13px}.field label{display:block;color:var(--muted);font-size:11px;font-weight:800;margin-bottom:7px}.field input,.field select{width:100%;background:#191820;border:1px solid #454154;border-radius:12px;padding:13px;color:var(--text);min-height:46px}.row-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.settings-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);font-size:12px}.settings-row:last-child{border-bottom:0}.settings-row button{background:#343142;color:var(--accent2);padding:9px 11px;border-radius:10px;font-size:10px;font-weight:850}
+.bottom-note{text-align:center;color:#777286;font-size:10px;margin:23px 10px 0;line-height:1.5}
+.nav{position:fixed;z-index:5;left:50%;transform:translateX(-50%);bottom:0;width:min(100%,600px);padding:9px 14px calc(9px + env(safe-area-inset-bottom));background:#17161DEB;backdrop-filter:blur(22px);border-top:1px solid #393744;display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.nav button{background:transparent;color:#8F899F;border-radius:13px;padding:8px 4px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;font-weight:850}.nav button.active{color:var(--accent2);background:#A78BFA15}.nav .nav-icon{font-size:19px;line-height:1}
+.modal-backdrop{position:fixed;inset:0;background:#000B;z-index:10;display:none;align-items:flex-end;justify-content:center;padding:12px}.modal-backdrop.open{display:flex}.modal{width:min(100%,520px);background:#1B1A23;border:1px solid #454154;border-radius:25px;padding:21px 18px calc(18px + env(safe-area-inset-bottom));box-shadow:0 20px 80px #0009;max-height:92dvh;overflow:auto}.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}.modal-head h2{font-size:19px;margin:0}.close{background:#302F3B;color:var(--text);width:34px;height:34px;border-radius:11px;font-size:20px}.save-btn{width:100%;background:var(--accent);color:#17131F;padding:14px;border-radius:14px;font-weight:950;margin-top:5px}.cancel-btn{width:100%;background:transparent;color:var(--muted);padding:11px;margin-top:4px}.toast{position:fixed;bottom:calc(86px + env(safe-area-inset-bottom));left:50%;transform:translate(-50%,20px);background:#E8DFFF;color:#17131F;padding:12px 17px;border-radius:13px;font-size:12px;font-weight:900;z-index:20;opacity:0;pointer-events:none;transition:.2s;white-space:nowrap;max-width:92vw}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(min-width:560px){.app{padding-top:24px}.modal-backdrop{align-items:center}.modal{padding-bottom:20px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+
+.tg-auth-status{margin:-9px 1px 16px;padding:9px 11px;border:1px solid var(--line);border-radius:13px;background:#24232D;color:var(--muted);font-size:10px;line-height:1.45;font-weight:750}.tg-auth-status[data-state="success"]{color:#A7F3C5;border-color:#2C6548;background:#183326}.tg-auth-status[data-state="error"]{color:#FFB4B4;border-color:#704044;background:#351F23}.tg-auth-status[data-state="local"]{color:var(--muted)}
+body.telegram-mini{padding-bottom:calc(86px + env(safe-area-inset-bottom))}
+body.telegram-mini .app{padding-top:calc(10px + env(safe-area-inset-top))}
+body.telegram-mini .nav{bottom:env(safe-area-inset-bottom)}
+body.telegram-mini .topbar{padding-top:5px}body.telegram-mini .app{min-height:var(--tg-viewport-height,100vh)}
+body.telegram-mini .tg-user-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid #4A405E;background:#24232D;border-radius:999px;padding:5px 9px;font-size:11px;color:#E8DFFF;max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+<script defer src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+<div class="app">
+<header><div class="brand"><div class="logo">ϟ</div><div><h1>ENERGY<span style="color:var(--accent)">$</span></h1><p>YOUR WALLET IS SWEATING</p></div></div><button class="icon-btn" id="settingsBtn" aria-label="Настройки">⚙</button></header>
+<div id="telegramAuthStatus" class="tg-auth-status" role="status" aria-live="polite">Проверяем подключение Telegram…</div>
+
+<section class="view active" id="view-home">
+  <section class="hero">
+    <div class="hero-top"><div class="eyebrow">Расходы за месяц</div><div class="pill" id="monthPill">ЭТОТ МЕСЯЦ</div></div>
+    <div class="hero-total" id="monthTotal">0 ₽</div>
+    <div class="hero-bottom"><div><p>Выпито банок</p><div class="hero-count" id="monthCount">0 <span>шт.</span></div></div><div style="text-align:right"><p>Средняя цена</p><div class="hero-count" id="avgPrice">0 ₽</div></div></div>
+  </section>
+  <div class="mascot-card" id="mascotCard" role="button" tabindex="0" aria-label="Поговорить с Банчиком"><div class="bubble-dot"></div>
+    <div class="mascot mascot-sprite" id="mascotArt" aria-hidden="true"><img class="mascot-frame" id="mascotFrame" src="assets/mascot/idle/01.png" alt="" draggable="false"></div>
+    <div class="mascot-copy"><div class="mascot-name">БАНЧИК · ТВОЙ КОРЕШ</div><div class="mascot-line" id="mascotLine">Ну чё, считаем твои инвестиции в баночки?</div><div class="mascot-sub" id="mascotSub">Нажми на меня, если не боишься правды.</div></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-icon">⚡</div><div class="value" id="todayCount">0</div><div class="label">Банок сегодня</div></div>
+    <div class="stat"><div class="stat-icon">↗</div><div class="value" id="todayCost">0 ₽</div><div class="label">Потрачено сегодня</div></div>
+    <div class="stat"><div class="stat-icon">▦</div><div class="value" id="allCount">0</div><div class="label">Всего банок</div></div>
+    <div class="stat"><div class="stat-icon">◎</div><div class="value" id="allCost">0 ₽</div><div class="label">Потрачено за всё время</div></div>
+  </div>
+  <button class="quick-add" id="addBtn"><span class="plus">+</span> ЗАПИСАТЬ ЭНЕРГЕТИК</button>
+  <div class="section-head"><h2>Последние покупки</h2><button class="small-link" id="goStats">Подробная статистика ↗</button></div>
+  <div class="history" id="homeHistory"></div>
+</section>
+
+<section class="view" id="view-stats">
+  <div class="section-head" style="margin-top:4px"><h2>Твои цифры, легенда</h2></div>
+  <div class="section-head"><h2>Расходы</h2><div class="period-tabs" id="chartTabs"><button data-range="7" class="active">7 дней</button><button data-range="30">30 дней</button><button data-range="all">Всё</button></div></div>
+  <div class="panel"><div class="chart-wrap"><canvas id="chart" aria-label="График расходов"></canvas></div><div class="chart-caption"><span id="chartLeft">Последние 7 дней</span><span id="chartTotal">0 ₽</span></div></div>
+  <div class="section-head"><h2>Сравнения</h2></div>
+  <div class="compare-grid">
+    <div class="compare-card"><div class="mini">СРЕДНИЙ ЧЕК</div><div class="big" id="avgAll">0 ₽</div><div class="sub">Цена одной банки за всё время</div></div>
+    <div class="compare-card"><div class="mini">ПРОШЛЫЙ МЕСЯЦ</div><div class="big" id="prevMonthCost">0 ₽</div><div class="sub" id="monthCompare">Пока нечего сравнивать</div></div>
+    <div class="compare-card"><div class="mini">САМЫЙ ДОРОГОЙ МЕСЯЦ</div><div class="big" id="bestMonth">—</div><div class="sub">Где кошелёк плакал громче</div></div>
+    <div class="compare-card"><div class="mini">УСЛОВНЫЙ БЕНЗИН</div><div class="big" id="fuelCompare">0 л</div><div class="sub">По цене, которую задашь ниже</div></div>
+    <div class="compare-card"><div class="mini">ЭТО КАК КОФЕ</div><div class="big" id="coffeeCompare">0 чашек</div><div class="sub">Сколько чашек по заданной цене</div></div>
+  </div>
+  <div class="section-head"><h2>Настрой сравнение</h2></div>
+  <div class="panel">
+    <div class="field"><label for="fuelPrice">Цена литра бензина для сравнения, ₽</label><input id="fuelPrice" type="number" min="1" max="10000" step="1" class="input-inline" value="60"></div>
+    <div class="field"><label for="coffeePrice">Цена кофе для сравнения, ₽</label><input id="coffeePrice" type="number" min="1" max="10000" step="1" class="input-inline" value="200"></div>
+  </div>
+  <div class="section-head"><h2>Мемный отчёт</h2><button class="small-link" id="refreshRoast">Другая реплика ↻</button></div>
+  <div class="report-card" id="reportCard">
+    <div class="report-title">ENERGY$ · ФИНАНСОВЫЙ АУДИТ</div>
+    <div class="report-amount" id="reportAmount">0 ₽</div>
+    <div class="report-line" id="reportLine">Добавь покупки, чтобы мы посчитали масштаб происходящего.</div>
+    <div class="report-quote" id="reportQuote">«Пока кошелёк в безопасности. Но это ненадолго».</div>
+  </div>
+  <div class="btn-row"><button class="secondary-btn" id="shareReport">Поделиться отчётом</button><button class="secondary-btn" id="downloadCard">Сохранить карточку PNG</button></div>
+  <div class="section-head"><h2>Вся история</h2><button class="small-link" id="allHistoryBtn">Свернуть ↑</button></div>
+  <div class="history" id="allHistory"></div>
+</section>
+
+<section class="view" id="view-mascot">
+  <div class="section-head" style="margin-top:4px"><h2>Комната Банчика</h2><button class="small-link" id="tapMascot">Поболтать ↻</button></div>
+  <div class="mascot-card" style="min-height:145px;margin-top:0">
+    <div class="mascot mascot-sprite" style="transform:scale(1.18);margin:5px 4px"><img class="mascot-frame" src="assets/mascot/idle/01.png" alt="" draggable="false"></div>
+    <div class="mascot-copy"><div class="mascot-name">БАНЧИК · БЕЗ ФИЛЬТРОВ</div><div class="mascot-line" id="mascotRoomLine">Я не осуждаю. Я веду бухгалтерию твоих приколов.</div><div class="mascot-sub">Тапай — запускай новые покадровые эмоции Банчика.</div></div>
+  </div>
+  <div class="section-head"><h2>Пасхалки</h2></div>
+  <div class="panel">
+    <div class="eyebrow">Psst…</div>
+    <p style="font-size:13px;line-height:1.6;color:#D4CDE2">У Банчика есть скрытые реакции. Потапай на него, запиши круглое число покупок или загляни сюда после нового рекорда. Не всё будет объяснено — в этом и прикол.</p>
+    <button class="secondary-btn" id="secretBtn" style="width:100%">Проверить секретный режим</button>
+    <p id="secretText" style="display:none;color:var(--accent2);font-weight:850;font-size:13px;line-height:1.5;margin-bottom:0">СЕКРЕТ ОТКРЫТ: «Банка знает, где ты прячешь мелочь». Ничего не сломано. Пока что.</p>
+  </div>
+  <div class="section-head"><h2>Мой рекорд</h2></div>
+  <div class="panel"><div class="eyebrow">Самая дорогая запись</div><div class="hero-count" id="maxPurchase">Пока нет данных</div><div style="color:var(--muted);font-size:11px;margin-top:6px" id="maxPurchaseSub">Добавь первую покупку.</div></div>
+</section>
+
+<div class="bottom-note">ENERGY$ · Telegram-профиль подтверждается сервером · история покупок хранится на этом устройстве</div>
+</div>
+
+<nav class="nav" aria-label="Основная навигация">
+  <button class="active" data-view="home"><span class="nav-icon">⌂</span><span>Главная</span></button>
+  <button data-view="stats"><span class="nav-icon">▥</span><span>Статистика</span></button>
+  <button data-view="mascot"><span class="nav-icon">☻</span><span>Банчик</span></button>
+</nav>
+
+<div class="modal-backdrop" id="entryBackdrop" role="dialog" aria-modal="true" aria-labelledby="entryModalTitle">
+ <div class="modal"><div class="modal-head"><h2 id="entryModalTitle">Новый энергетик</h2><button class="close" data-close="entryBackdrop" aria-label="Закрыть">×</button></div>
+ <form id="entryForm"><input type="hidden" id="entryId">
+  <div class="field"><label for="drinkName">Название (необязательно)</label><input id="drinkName" maxlength="70" placeholder="Например, Monster"></div>
+  <div class="row-fields"><div class="field"><label for="drinkPrice">Цена, ₽ *</label><input id="drinkPrice" type="number" inputmode="decimal" min="0" max="1000000" step="0.01" placeholder="150" required></div><div class="field"><label for="drinkDate">Дата и время *</label><input id="drinkDate" type="datetime-local" required></div></div>
+  <button class="save-btn" type="submit" id="saveEntryBtn">Сохранить запись</button><button class="cancel-btn" type="button" data-close="entryBackdrop">Отмена</button>
+ </form></div>
+</div>
+<div class="modal-backdrop" id="settingsBackdrop" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+ <div class="modal"><div class="modal-head"><h2 id="settingsTitle">Настройки</h2><button class="close" data-close="settingsBackdrop" aria-label="Закрыть">×</button></div>
+  <div class="settings-row"><div><b>Экспорт истории</b><div style="color:var(--muted);font-size:10px;margin-top:4px">CSV для Numbers или Excel</div></div><button id="exportBtn">Экспорт CSV</button></div>
+  <div class="settings-row"><div><b>Резервная копия</b><div style="color:var(--muted);font-size:10px;margin-top:4px">Сохранить JSON-файл</div></div><button id="backupBtn">Скачать JSON</button></div>
+  <div class="settings-row"><div><b>Восстановить данные</b><div style="color:var(--muted);font-size:10px;margin-top:4px">Импорт JSON-копии</div></div><button id="importBtn">Импорт</button><input type="file" id="importFile" accept=".json,application/json" hidden></div>
+  <div class="settings-row"><div><b>Юмор Банчика</b><div style="color:var(--muted);font-size:10px;margin-top:4px">Спрятать дерзкие реплики</div></div><button id="roastToggle">Выкл. прожарку</button></div>
+  <div class="settings-row"><div><b>Удалить всю историю</b><div style="color:var(--muted);font-size:10px;margin-top:4px">Это действие нельзя отменить</div></div><button id="clearBtn" style="color:#FF818A">Удалить</button></div>
+  <button class="cancel-btn" data-close="settingsBackdrop">Закрыть</button>
+ </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+const STORAGE_KEY='energy-dollar-entries-v1';
+const SETTINGS_KEY='energy-dollar-settings-v2';
+let entries=[],settings={fuelPrice:60,coffeePrice:200,roast:true},chartRange='7',showAllHistory=true,toastTimer,mascotTapCount=0,roastIndex=0;
+const $=id=>document.getElementById(id);
+const roasts=[
+'«Бро, твой кошелёк уже слышит звук открывающейся банки и прячется под диван».',
+'«Поздравляю: твои деньги нашли новый способ испаряться. С газом и вкусом химии».',
+'«Ещё одна банка. Финансовая грамотность вышла из чата».',
+'«Твой бюджет просил передать: ему нужна пауза и адвокат».',
+'«Ты не покупаешь энергетик. Ты оформляешь микрокредит у самого себя».',
+'«Если бы чеки давали XP, ты бы уже прошёл бухгалтерию на максималке».',
+'«Кошелёк пустой, зато банка уверена в себе. У каждого свой путь».',
+'«Это не траты, это коллекционирование алюминия с побочными эффектами».',
+'«Брат, холодильник у кассы уже считает тебя родственником».',
+'«Твои расходы сейчас выглядят бодрее, чем ты сам».',
+'«У денег короткая жизнь. Особенно если рядом ты и холодильник».',
+'«Я бы сказал “остановись”, но я буквально банка. У меня конфликт интересов».'
+];
+const lightLines=['«Привет, инвестор в алюминий. Что сегодня записываем?»','«Я не осуждаю. Я просто запоминаю каждую цифру».','«У меня внутри заряд, у тебя в истории расходов сюжетный поворот».','«Ну что, снова делаем вид, что это экономически обосновано?»'];
+const rub=n=>new Intl.NumberFormat('ru-RU',{style:'currency',currency:'RUB',maximumFractionDigits:2}).format(n||0).replace(/\u00a0/g,' ');
+const localDateTimeValue=d=>{const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`};
+const dateKey=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const safeDate=s=>{const d=new Date(s);return Number.isNaN(d.getTime())?new Date():d};
+const total=list=>list.reduce((s,e)=>s+Number(e.price||0),0);
+function load(){try{const raw=localStorage.getItem(STORAGE_KEY);entries=raw?JSON.parse(raw):[];if(!Array.isArray(entries))entries=[];entries=entries.filter(e=>e&&e.id&&Number.isFinite(Number(e.price))&&Number(e.price)>=0&&e.date).map(e=>({...e,id:String(e.id),name:String(e.name||''),price:Number(e.price)}))}catch(e){entries=[]}try{const raw=localStorage.getItem(SETTINGS_KEY);if(raw)settings={...settings,...JSON.parse(raw)}}catch(e){}}
+function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(entries));if(typeof publishCloudStats==='function')publishCloudStats();return true}catch(e){toast('Не удалось сохранить. Освободи место в браузере.');return false}}
+function saveSettings(){try{localStorage.setItem(SETTINGS_KEY,JSON.stringify(settings))}catch(e){toast('Не удалось сохранить настройки')}}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2400)}
+function monthEntries(offset=0){const now=new Date(),target=new Date(now.getFullYear(),now.getMonth()+offset,1);return entries.filter(e=>{const d=safeDate(e.date);return d.getFullYear()===target.getFullYear()&&d.getMonth()===target.getMonth()})}
+function todayEntries(){const today=dateKey(new Date());return entries.filter(e=>dateKey(safeDate(e.date))===today)}
+function getMonthName(d){return d.toLocaleDateString('ru-RU',{month:'long',year:'numeric'})}
+function render(){
+ const month=monthEntries(),prev=monthEntries(-1),today=todayEntries(),sum=total(month),all=total(entries);
+ $('monthTotal').textContent=rub(sum);$('monthCount').innerHTML=`${month.length} <span>шт.</span>`;$('avgPrice').textContent=rub(month.length?sum/month.length:0);
+ $('todayCount').textContent=today.length;$('todayCost').textContent=rub(total(today));$('allCount').textContent=entries.length;$('allCost').textContent=rub(all);
+ $('monthPill').textContent=getMonthName(new Date()).toUpperCase();$('avgAll').textContent=rub(entries.length?all/entries.length:0);$('prevMonthCost').textContent=rub(total(prev));
+ const diff=sum-total(prev);$('monthCompare').textContent=prev.length?(diff>0?`На ${rub(diff)} больше, чем в прошлом месяце`:diff<0?`На ${rub(Math.abs(diff))} меньше, чем в прошлом месяце`:'Сумма такая же'):'Нет записей за прошлый месяц';
+ const byMonth={};entries.forEach(e=>{const d=safeDate(e.date),k=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;byMonth[k]=(byMonth[k]||0)+Number(e.price||0)});
+ const top=Object.entries(byMonth).sort((a,b)=>b[1]-a[1])[0];$('bestMonth').textContent=top?rub(top[1]):'—';
+ const fuel=Math.max(1,Number(settings.fuelPrice)||60),coffee=Math.max(1,Number(settings.coffeePrice)||200);$('fuelCompare').textContent=`${numCompact(all/fuel)} л`;$('coffeeCompare').textContent=`${numCompact(all/coffee)} чашек`;
+ $('fuelPrice').value=settings.fuelPrice;$('coffeePrice').value=settings.coffeePrice;
+
+ const max=[...entries].sort((a,b)=>Number(b.price)-Number(a.price))[0];$('maxPurchase').textContent=max?rub(max.price):'Пока нет данных';$('maxPurchaseSub').textContent=max?`${max.name||'Энергетик'} · ${safeDate(max.date).toLocaleDateString('ru-RU')}`:'Добавь первую покупку.';
+ renderChart();renderHistory();renderRoast();renderFriends();$('roastToggle').textContent=settings.roast?'Выкл. прожарку':'Вкл. прожарку';
+}
+function numCompact(n){return new Intl.NumberFormat('ru-RU',{maximumFractionDigits:1}).format(n||0)}
+function getChartData(){const now=new Date();now.setHours(0,0,0,0);if(chartRange==='all'){const by={};[...entries].sort((a,b)=>safeDate(a.date)-safeDate(b.date)).forEach(e=>{const d=safeDate(e.date),k=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;by[k]=(by[k]||0)+Number(e.price||0)});return Object.entries(by).slice(-12).map(([k,v])=>({label:k.slice(5),value:v}))}const days=Number(chartRange),out=[];for(let i=days-1;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);const k=dateKey(d);const sum=entries.filter(e=>dateKey(safeDate(e.date))===k).reduce((s,e)=>s+Number(e.price||0),0);out.push({label:days===7?d.toLocaleDateString('ru-RU',{weekday:'short'}).replace('.',''):String(d.getDate()),value:sum})}return out}
+function renderChart(){const canvas=$('chart');if(!canvas)return;const ctx=canvas.getContext('2d'),rect=canvas.getBoundingClientRect(),ratio=window.devicePixelRatio||1;canvas.width=Math.max(1,Math.round(rect.width*ratio));canvas.height=Math.max(1,Math.round(rect.height*ratio));ctx.scale(ratio,ratio);const w=rect.width,h=rect.height,data=getChartData(),pad={l:4,r:4,t:12,b:23},cw=w-pad.l-pad.r,ch=h-pad.t-pad.b;ctx.clearRect(0,0,w,h);ctx.font='10px -apple-system, sans-serif';if(!data.length){ctx.fillStyle='#A9A5B8';ctx.textAlign='center';ctx.fillText('Добавь первую запись — тут появится график',w/2,h/2);$('chartTotal').textContent=rub(0);return}const max=Math.max(1,...data.map(d=>d.value)),step=cw/data.length,barW=Math.max(3,Math.min(18,step*.55));for(let j=0;j<3;j++){const y=pad.t+ch*j/2;ctx.strokeStyle='#393744';ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke()}data.forEach((d,i)=>{const bh=d.value?Math.max(3,ch*d.value/max):2,x=pad.l+i*step+(step-barW)/2,y=pad.t+ch-bh;ctx.fillStyle=d.value?'#A78BFA':'#3A3748';ctx.beginPath();ctx.roundRect(x,y,barW,bh,[Math.min(5,barW/2),Math.min(5,barW/2),1,1]);ctx.fill();if(data.length<=7||i%Math.ceil(data.length/7)===0||i===data.length-1){ctx.fillStyle='#A9A5B8';ctx.textAlign='center';ctx.fillText(d.label,x+barW/2,h-5)}});$('chartTotal').textContent=rub(data.reduce((s,d)=>s+d.value,0));$('chartLeft').textContent=chartRange==='7'?'Последние 7 дней':chartRange==='30'?'Последние 30 дней':'Последние 12 месяцев'}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function entryMarkup(e){const d=safeDate(e.date),date=d.toLocaleDateString('ru-RU',{day:'2-digit',month:'short'})+' · '+d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});return `<div class="entry"><div class="can-icon">🥤</div><div class="entry-main"><div class="entry-title">${esc(e.name||'Энергетик')}</div><div class="entry-date">${date}</div></div><div><div class="entry-price">${rub(Number(e.price)||0)}</div><div class="entry-actions"><button data-edit="${esc(e.id)}">Изменить</button><button class="delete" data-delete="${esc(e.id)}">Удалить</button></div></div></div>`}
+function wireEntries(root){root.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>openEdit(b.dataset.edit)));root.querySelectorAll('[data-delete]').forEach(b=>b.addEventListener('click',()=>deleteEntry(b.dataset.delete)))}
+function renderHistory(){const sorted=[...entries].sort((a,b)=>safeDate(b.date)-safeDate(a.date));const home=$('homeHistory'),all=$('allHistory');home.innerHTML=sorted.length?sorted.slice(0,3).map(entryMarkup).join(''):'<div class="panel empty"><div class="big">🥤</div><b style="color:var(--text)">Пока пусто</b><br>Запиши первую банку — бухгалтерия Банчика уже нервничает.</div>';all.innerHTML=sorted.length?sorted.map(entryMarkup).join(''):'<div class="panel empty">История пока пуста.</div>';wireEntries(home);wireEntries(all)}
+function currentRoast(){if(!settings.roast)return '«Я сегодня без комментариев. Наслаждайся редкой тишиной».';const all=total(entries),month=total(monthEntries());if(!entries.length)return '«Добавь первую покупку. Мне нужна работа, я не для красоты из алюминия сделан».';
+ if(entries.length%25===0)return '«Круглая дата! '+entries.length+' записей. Ты это учёт ведёшь или коллекционируешь чеки?»';
+ if(month>5000)return '«'+rub(month)+' за месяц? Твой кошелёк уже пишет завещание».';
+ if(all>0&&all%1000<150)return '«Сумма уже '+rub(all)+'. Где-то грустит одна несостоявшаяся покупка».';
+ return roasts[(roastIndex+entries.length)%roasts.length]}
+function renderRoast(){const line=currentRoast();$('reportAmount').textContent=rub(total(monthEntries()));$('reportLine').textContent=`За этот месяц: ${monthEntries().length} банок. За всё время: ${entries.length} покупок на ${rub(total(entries))}.`;$('reportQuote').textContent=line;$('mascotLine').textContent=entries.length?line:'«Ну чё, считаем твои инвестиции в баночки?»';$('mascotRoomLine').textContent=line}
+
+// Telegram Mini App: authenticate using raw initData; never trust initDataUnsafe for identity.
+const ENERGY_SUPABASE_URL='https://nrcnoxxemyihnhtpvenr.supabase.co';
+const ENERGY_SUPABASE_PUBLISHABLE_KEY='sb_publishable_H9DpmYgbYyAYXsWwwmelWQ_2vxKVkWL';
+let verifiedTelegramUser=null;
+function setTelegramStatus(message, state='pending'){
+ const el=$('telegramAuthStatus'); if(!el)return;
+ el.textContent=message; el.dataset.state=state;
+}
+async function initTelegramMiniApp(){
+ const tg=window.Telegram?.WebApp;
+ if(!tg){setTelegramStatus('Открой ENERGY$ через Telegram, чтобы подтвердить профиль.','local');return}
+ try{
+  tg.ready();tg.expand();tg.setHeaderColor?.('#111116');tg.setBackgroundColor?.('#111116');tg.disableVerticalSwipes?.();
+  tg.onEvent?.('viewportChanged',()=>document.documentElement.style.setProperty('--tg-viewport-height',(tg.viewportStableHeight||tg.viewportHeight)+'px'));
+  document.documentElement.style.setProperty('--tg-viewport-height',(tg.viewportStableHeight||tg.viewportHeight)+'px');
+ }catch(e){console.warn('Telegram WebApp UI setup:',e)}
+ const initData=tg.initData;
+ if(typeof initData!=='string'||!initData){setTelegramStatus('Telegram не передал данные авторизации. Закрой и заново открой Mini App.','error');return}
+ setTelegramStatus('Подтверждаем аккаунт Telegram…','pending');
+ try{
+  const response=await fetch(`${ENERGY_SUPABASE_URL}/functions/v1/telegram-auth`,{
+   method:'POST',headers:{'Content-Type':'application/json','apikey':ENERGY_SUPABASE_PUBLISHABLE_KEY},
+   body:JSON.stringify({initData})
+  });
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok||!result.success||!result.user)throw new Error(result.error||`HTTP ${response.status}`);
+  verifiedTelegramUser=result.user;
+  const fullName=[result.user.first_name,result.user.last_name].filter(Boolean).join(' ')||'Пользователь Telegram';
+  const label=result.user.username?`${fullName} · @${result.user.username}`:fullName;
+  setTelegramStatus(`✓ ${label} · аккаунт подтверждён`,'success');
+ }catch(error){
+  console.error('ENERGY$ Telegram auth failed:',error);
+  const message=String(error?.message||'');
+  setTelegramStatus(message.includes('expired')?'Сессия Telegram устарела. Закрой и снова открой приложение.':'Не удалось подтвердить Telegram. Проверь соединение и попробуй открыть Mini App заново.','error');
+ }
+}
+const mascotSequences={idle:8,blink:5,breathe:5,joy:8,laugh:6,wink:5,shock:8,sad:5,angry:6,sarcasm:8,sleepy:5,dance:7,drink:8,fail:6,hype:6};
+let mascotFrameTimer=null;
+function playMascotMood(mood){
+ const art=document.querySelectorAll('.mascot');
+ const imgs=[...document.querySelectorAll('.mascot-frame')];
+ if(!imgs.length)return;
+ if(mascotFrameTimer){clearInterval(mascotFrameTimer);mascotFrameTimer=null}
+ const seqCount=mascotSequences[mood]||mascotSequences.idle;
+ let frame=1;
+ const durationMap={idle:210,blink:130,breathe:240,joy:115,laugh:100,wink:140,shock:110,sad:180,angry:105,sarcasm:125,sleepy:210,dance:95,drink:115,fail:105,hype:100};
+ const step=durationMap[mood]||130;
+ const setFrame=()=>{const src=`assets/mascot/${mood}/${String(frame).padStart(2,'0')}.png`;imgs.forEach(img=>img.src=src);frame=frame%seqCount+1};
+ setFrame();
+ if(mood==='idle')return;
+ mascotFrameTimer=setInterval(setFrame,step);
+ const total=step*seqCount;
+ window.setTimeout(()=>{if(mascotFrameTimer){clearInterval(mascotFrameTimer);mascotFrameTimer=null}imgs.forEach(img=>img.src='assets/mascot/idle/01.png')},Math.min(total*2,3600));
+}
+
+function nextRoast(){
+ roastIndex++;
+ const lines=(settings.roast?roasts:lightLines);
+ const line=lines[roastIndex%lines.length];
+ $('mascotLine').textContent=line;
+ $('mascotRoomLine').textContent=line;
+ $('reportQuote').textContent=line;
+ mascotTapCount++;
+ const moods=['wink','laugh','shock','joy','sarcasm','dance','sad','angry','sleepy','fail'];
+ playMascotMood(moods[(mascotTapCount-1)%moods.length]);
+ if(mascotTapCount===7){$('secretText').style.display='block';toast('Пасхалка открыта 👀')}
+ else toast(['Банчик осудил молча','Банчик сделал вид, что не заметил','Банчик записал это в бухгалтерию'][mascotTapCount%3]);
+}
+function switchView(view){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+view));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===view));if(view==='stats'){renderChart();render()}window.scrollTo({top:0,behavior:'smooth'})}
+function openModal(id){$(id).classList.add('open');document.body.style.overflow='hidden'}
+function closeModal(id){$(id).classList.remove('open');if(!$('entryBackdrop').classList.contains('open')&&!$('settingsBackdrop').classList.contains('open'))document.body.style.overflow=''}
+function openNew(){$('entryForm').reset();$('entryId').value='';$('entryModalTitle').textContent='Новый энергетик';$('saveEntryBtn').textContent='Сохранить запись';$('drinkDate').value=localDateTimeValue(new Date());openModal('entryBackdrop');setTimeout(()=>$('drinkPrice').focus({preventScroll:true}),100)}
+function openEdit(id){const e=entries.find(x=>x.id===id);if(!e)return;$('entryId').value=e.id;$('drinkName').value=e.name||'';$('drinkPrice').value=e.price;$('drinkDate').value=localDateTimeValue(safeDate(e.date));$('entryModalTitle').textContent='Изменить запись';$('saveEntryBtn').textContent='Сохранить изменения';openModal('entryBackdrop')}
+function deleteEntry(id){const e=entries.find(x=>x.id===id);if(!e)return;if(!confirm(`Удалить запись «${e.name||'Энергетик'}» за ${rub(e.price)}?`))return;entries=entries.filter(x=>x.id!==id);save();render();toast('Запись удалена')}
+$('addBtn').addEventListener('click',openNew);
+$('entryForm').addEventListener('submit',ev=>{ev.preventDefault();const price=Number($('drinkPrice').value),date=$('drinkDate').value;if(!Number.isFinite(price)||price<0||!date){toast('Проверь цену и дату');return}const id=$('entryId').value;const entry={id:id||((crypto.randomUUID&&crypto.randomUUID())||String(Date.now())+Math.random()),name:$('drinkName').value.trim(),price:Math.round(price*100)/100,date:new Date(date).toISOString()};if(id){entries=entries.map(e=>e.id===id?entry:e);toast('Изменения сохранены')}else{entries.push(entry);toast('Запись добавлена. Банчик всё видел ⚡')}save();closeModal('entryBackdrop');render()});
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeModal(b.dataset.close)));document.querySelectorAll('.modal-backdrop').forEach(b=>b.addEventListener('click',e=>{if(e.target===b)closeModal(b.id)}));
+$('settingsBtn').addEventListener('click',()=>openModal('settingsBackdrop'));
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.view)));$('goStats').addEventListener('click',()=>switchView('stats'));
+$('chartTabs').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{chartRange=b.dataset.range;$('chartTabs').querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));renderChart()}));
+$('allHistoryBtn').addEventListener('click',()=>{showAllHistory=!showAllHistory;$('allHistory').style.display=showAllHistory?'flex':'none';$('allHistoryBtn').textContent=showAllHistory?'Свернуть ↑':'Показать всю историю ↓'});
+$('fuelPrice').addEventListener('change',()=>{settings.fuelPrice=Math.max(1,Number($('fuelPrice').value)||60);saveSettings();render()});$('coffeePrice').addEventListener('change',()=>{settings.coffeePrice=Math.max(1,Number($('coffeePrice').value)||200);saveSettings();render()});
+$('mascotCard').addEventListener('click',nextRoast);$('mascotCard').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();nextRoast()}});$('tapMascot').addEventListener('click',nextRoast);$('refreshRoast').addEventListener('click',()=>{nextRoast();toast('Новая порция правды')});
+$('secretBtn').addEventListener('click',()=>{const el=$('secretText');el.style.display=el.style.display==='none'?'block':'none';if(el.style.display==='block')toast('Секретный режим активирован')});
+$('roastToggle').addEventListener('click',()=>{settings.roast=!settings.roast;saveSettings();render();toast(settings.roast?'Банчик снова без фильтров':'Банчику выдали отпуск')});
+function reportText(){return `ENERGY$ · ФИНАНСОВЫЙ АУДИТ\nРасходы за месяц: ${rub(total(monthEntries()))}\nБанок за месяц: ${monthEntries().length}\nВсего покупок: ${entries.length}\nЗа всё время: ${rub(total(entries))}\n\n${currentRoast()}\n\nСчитаю расходы вместе с ENERGY$.`}
+async function shareReport(){const text=reportText();try{if(navigator.share){await navigator.share({title:'Мой отчёт ENERGY$',text});}else{await navigator.clipboard.writeText(text);toast('Отчёт скопирован — вставляй в Telegram')}}catch(e){if(e.name!=='AbortError'){try{await navigator.clipboard.writeText(text);toast('Отчёт скопирован')}catch(_){toast('Не удалось поделиться — попробуй сохранить PNG')}}}}
+$('shareReport').addEventListener('click',shareReport);
+function makeReportCanvas(){const c=document.createElement('canvas');c.width=1080;c.height=1350;const x=c.getContext('2d');const grad=x.createLinearGradient(0,0,1080,1350);grad.addColorStop(0,'#111116');grad.addColorStop(.65,'#24202F');grad.addColorStop(1,'#302548');x.fillStyle=grad;x.fillRect(0,0,c.width,c.height);x.fillStyle='#A78BFA';x.beginPath();x.roundRect(68,70,90,90,24);x.fill();x.fillStyle='#17131F';x.font='bold 60px Arial';x.fillText('ϟ',90,137);x.fillStyle='#E8DFFF';x.font='bold 52px Arial';x.fillText('ENERGY$',185,128);x.fillStyle='#A9A5B8';x.font='bold 23px Arial';x.fillText('ФИНАНСОВЫЙ АУДИТ',72,230);x.fillStyle='#E8DFFF';x.font='bold 92px Arial';x.fillText(rub(total(monthEntries())),70,370);x.fillStyle='#A78BFA';x.font='bold 28px Arial';x.fillText('ПОТРАЧЕНО ЗА МЕСЯЦ',74,425);x.fillStyle='#E8DFFF';x.font='bold 38px Arial';x.fillText(`${monthEntries().length} банок за месяц`,74,540);x.fillText(`${entries.length} покупок за всё время`,74,605);x.fillStyle='#A9A5B8';x.font='30px Arial';const lines=[`За всё время: ${rub(total(entries))}`,currentRoast()];x.fillText(lines[0],74,690);wrapText(x,lines[1],74,790,920,48);x.strokeStyle='#A78BFA66';x.lineWidth=2;x.beginPath();x.moveTo(74,1160);x.lineTo(1006,1160);x.stroke();x.fillStyle='#A9A5B8';x.font='24px Arial';x.fillText('Твоя энергия. Твои расходы. Твои приколы.',74,1210);return c}
+function wrapText(ctx,text,x,y,maxWidth,lineHeight){let line='',yy=y;for(const word of text.split(' ')){const test=line?line+' '+word:word;if(ctx.measureText(test).width>maxWidth&&line){ctx.fillText(line,x,yy);line=word;yy+=lineHeight}else line=test}if(line)ctx.fillText(line,x,yy)}
+$('downloadCard').addEventListener('click',()=>{try{const c=makeReportCanvas(),a=document.createElement('a');a.download='energy-dollar-report.png';a.href=c.toDataURL('image/png');a.click();toast('Карточка PNG готова')}catch(e){toast('Не удалось создать карточку')}});
+function download(name,content,type){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+$('exportBtn').addEventListener('click',()=>{const rows=[['id','name','price_rub','datetime'],...entries.map(e=>[e.id,e.name||'',e.price,safeDate(e.date).toISOString()])];const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\r\n');download('energy-dollar-history.csv','\ufeff'+csv,'text/csv;charset=utf-8');toast('CSV готов')});
+$('backupBtn').addEventListener('click',()=>{download('energy-dollar-backup.json',JSON.stringify({app:'ENERGY$',version:2,exportedAt:new Date().toISOString(),entries,settings},null,2),'application/json');toast('Резервная копия готова')});
+$('importBtn').addEventListener('click',()=>$('importFile').click());$('importFile').addEventListener('change',async ev=>{const file=ev.target.files[0];if(!file)return;try{const obj=JSON.parse(await file.text()),list=Array.isArray(obj)?obj:obj.entries;if(!Array.isArray(list)||!list.every(e=>e&&e.id&&e.date&&Number.isFinite(Number(e.price))&&Number(e.price)>=0&&Number.isFinite(new Date(e.date).getTime())))throw new Error('bad');if(!confirm(`Импортировать ${list.length} записей? Текущая история будет заменена.`))return;entries=list.map(e=>({id:String(e.id),name:String(e.name||''),price:Number(e.price),date:new Date(e.date).toISOString()}));if(obj.settings){settings={...settings,...obj.settings};saveSettings()}save();render();closeModal('settingsBackdrop');toast('Данные восстановлены')}catch(e){toast('Не удалось прочитать этот файл')}finally{ev.target.value=''}});
+$('clearBtn').addEventListener('click',()=>{if(!entries.length){toast('История уже пустая');return}if(!confirm('Точно удалить ВСЮ историю? Сначала сделай резервную копию, если она нужна.'))return;entries=[];save();render();closeModal('settingsBackdrop');toast('История очищена')});
+window.addEventListener('resize',()=>{if($('view-stats').classList.contains('active'))renderChart()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal('entryBackdrop');closeModal('settingsBackdrop')}});
+try{initTelegramMiniApp();playMascotMood('idle');load();render();$('allHistory').style.display='flex'}catch(err){console.error('ENERGY$ startup error',err);const note=document.createElement('div');note.className='panel';note.style.margin='12px 0';note.textContent='Не удалось запустить часть приложения. Обнови страницу; личные данные не удалены.';document.querySelector('.app')?.prepend(note)}
+window.addEventListener('load',()=>{if(!verifiedTelegramUser)initTelegramMiniApp()},{once:true});
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+})();
+</script>
+</body>
+</html>
