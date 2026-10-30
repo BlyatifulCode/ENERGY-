@@ -162,9 +162,39 @@ button{ -webkit-tap-highlight-color:transparent; touch-action:manipulation }
 @media(min-width:600px){.nav{position:fixed;left:50%;right:auto;bottom:18px;transform:translateX(-50%);width:min(448px,calc(100% - 28px));margin:0;border-radius:27px}.app{padding-bottom:130px}}
 @media(max-width:360px){.nav{width:calc(100% - 20px);bottom:calc(7px + env(safe-area-inset-bottom));padding:6px;gap:2px}.nav button{min-height:56px;font-size:9px;border-radius:18px}.nav button svg{width:21px;height:21px}}
 @media(prefers-reduced-motion:reduce){.nav button{transition:none}}
+
+/* ENERGY$ carbonation atmosphere — subtle animated fizz for mobile */
+body{position:relative;isolation:isolate;background:#121214;overflow-x:hidden}
+body:before,body:after{content:"";position:fixed;inset:-12%;z-index:-2;pointer-events:none}
+body:before{
+  background:
+    radial-gradient(ellipse at 12% 18%,rgba(240,120,54,.105),transparent 38%),
+    radial-gradient(ellipse at 88% 58%,rgba(240,120,54,.075),transparent 34%),
+    radial-gradient(ellipse at 48% 105%,rgba(255,160,95,.07),transparent 42%);
+  animation:gasDrift 19s ease-in-out infinite alternate;will-change:transform
+}
+body:after{
+  z-index:-1;opacity:.42;
+  background:radial-gradient(ellipse at 50% 50%,transparent 48%,rgba(0,0,0,.28) 100%);
+}
+.fizz-bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;contain:strict}
+.fizz-bg i{position:absolute;bottom:-34px;left:var(--x);width:var(--s);height:var(--s);border:1px solid rgba(255,190,145,.25);border-radius:50%;background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.16),rgba(240,120,54,.025) 52%,transparent 72%);box-shadow:inset 0 0 7px rgba(255,180,130,.07),0 0 9px rgba(240,120,54,.045);opacity:0;animation:fizzRise var(--d) linear var(--delay) infinite;will-change:transform,opacity}
+.fizz-bg i:nth-child(3n){border-color:rgba(255,255,255,.18);box-shadow:0 0 5px rgba(255,255,255,.05)}
+.fizz-bg i:nth-child(4n){width:calc(var(--s)*.65);height:calc(var(--s)*.65)}
+@keyframes fizzRise{0%{transform:translate3d(0,0,0) scale(.72);opacity:0}9%{opacity:.45}52%{transform:translate3d(16px,-48vh,0) scale(1);opacity:.25}90%{opacity:.16}100%{transform:translate3d(-13px,-108vh,0) scale(1.12);opacity:0}}
+@keyframes gasDrift{0%{transform:translate3d(-1.5%,0,0) scale(1)}100%{transform:translate3d(1.5%,-1%,0) scale(1.04)}}
+@media(prefers-reduced-motion:reduce){body:before{animation:none}.fizz-bg i{animation:none;display:none}}
+@media(max-width:600px){.fizz-bg i{opacity:.8}}
+.month-filter{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:16px 0;padding:14px 16px;background:rgba(41,41,45,.72);border:1px solid rgba(255,255,255,.07);border-radius:18px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.month-filter input{min-width:0;max-width:52%;padding:10px 11px;border-radius:12px;border:1px solid rgba(240,120,54,.35);background:#202024;color:var(--text,#E9E6E0);font:inherit;color-scheme:dark;accent-color:#F07836}
+.month-filter input:focus{outline:2px solid rgba(240,120,54,.45);outline-offset:2px}
+@media(max-width:380px){.month-filter{align-items:flex-start;flex-direction:column}.month-filter input{max-width:100%;width:100%}}
 </style>
 </head>
 <body>
+<div class="fizz-bg" aria-hidden="true">
+  <i style="--x:5%;--s:7px;--d:17s;--delay:-4s"></i><i style="--x:13%;--s:11px;--d:22s;--delay:-13s"></i><i style="--x:21%;--s:5px;--d:15s;--delay:-8s"></i><i style="--x:29%;--s:9px;--d:20s;--delay:-2s"></i><i style="--x:38%;--s:6px;--d:18s;--delay:-11s"></i><i style="--x:47%;--s:13px;--d:24s;--delay:-17s"></i><i style="--x:56%;--s:5px;--d:16s;--delay:-6s"></i><i style="--x:64%;--s:8px;--d:21s;--delay:-14s"></i><i style="--x:72%;--s:6px;--d:17s;--delay:-9s"></i><i style="--x:81%;--s:12px;--d:23s;--delay:-19s"></i><i style="--x:89%;--s:5px;--d:16s;--delay:-3s"></i><i style="--x:96%;--s:8px;--d:20s;--delay:-12s"></i>
+</div>
 <div class="app">
   <header class="top">
     <div class="logo">ENERGY<span>$</span></div>
@@ -181,9 +211,13 @@ button{ -webkit-tap-highlight-color:transparent; touch-action:manipulation }
         <div class="count" id="totalCans">0 <small>БАНОК</small></div>
         <div class="herofoot"><span id="monthCans">0 за этот месяц</span><span>● система активна</span></div>
       </div>
+      <div class="month-filter card">
+        <div><div class="eyebrow">Показать расходы и банки за месяц</div><div class="hint">Выбери любой месяц</div></div>
+        <input id="monthPicker" type="month" aria-label="Выбрать месяц" onchange="selectMonth(this.value)">
+      </div>
       <div class="grid">
         <div class="stat"><div class="eyebrow">Потрачено всего</div><div class="value" id="totalSpent">0 ₽</div><div class="hint">Деньги испарились красиво</div></div>
-        <div class="stat"><div class="eyebrow">За этот месяц</div><div class="value" id="statMonth">0 ₽</div><div class="hint">Расходы за месяц</div></div>
+        <div class="stat"><div class="eyebrow" id="monthSpendLabel">Расходы за месяц</div><div class="value" id="statMonth">0 ₽</div><div class="hint" id="monthSpendCount">0 энергетиков</div></div>
         <div class="stat"><div class="eyebrow">Средняя цена</div><div class="value" id="avgPrice">—</div><div class="hint">За одну банку</div></div>
         <div class="stat"><div class="eyebrow">За 7 дней</div><div class="value" id="weekCans">0 банок</div><div class="hint">Неделя под контролем?</div></div>
         <div class="stat" style="grid-column:1/-1"><div class="eyebrow">Любимый бренд</div><div class="value" id="topBrand">—</div><div class="hint">Постоянный клиент</div></div>
@@ -287,6 +321,7 @@ function openBackupDB(){return new Promise(resolve=>{if(!('indexedDB'in window))
 async function writeBackupSnapshot(raw){try{if(!backupDb)return;const tx=backupDb.transaction('snapshots','readwrite');tx.objectStore('snapshots').add({created_at:new Date().toISOString(),schema:APP_SCHEMA_VERSION,payload:raw});await new Promise((res,rej)=>{tx.oncomplete=res;tx.onerror=rej;});const trim=backupDb.transaction('snapshots','readwrite'),store=trim.objectStore('snapshots'),all=await new Promise((res,rej)=>{const r=store.getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=rej;});all.sort((a,b)=>b.id-a.id).slice(5).forEach(x=>store.delete(x.id));}catch(e){console.warn('Backup snapshot skipped',e)}}
 function readInitialState(){const candidates=[localStorage.getItem(KEY),localStorage.getItem('energydollar_test_v1'),localStorage.getItem(BACKUP_KEY)];for(const raw of candidates){if(!raw)continue;try{const parsed=JSON.parse(raw);const candidate=parsed?.payload&&parsed?.format==='ENERGY$-BACKUP'?parsed.payload:parsed;if(validState(candidate))return normalizeState(candidate);}catch(e){console.warn('Invalid local state candidate',e)}}return blankState();}
 let state=readInitialState();
+let selectedMonth=dateISO().slice(0,7);
 async function initializeResilience(){backupDb=await openBackupDB();const hadLocal=!!(localStorage.getItem(KEY)||localStorage.getItem('energydollar_test_v1')||localStorage.getItem(BACKUP_KEY));if(!hadLocal&&!state.entries.length&&backupDb){try{const tx=backupDb.transaction('snapshots','readonly'),all=await new Promise((res,rej)=>{const r=tx.objectStore('snapshots').getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=rej;});all.sort((a,b)=>b.id-a.id);if(all[0]?.payload){const recovered=JSON.parse(all[0].payload);if(validState(recovered)){state=normalizeState(recovered);localStorage.setItem(KEY,JSON.stringify(state));render();toast('Данные восстановлены из локальной копии')}}}catch(e){console.warn('IndexedDB recovery skipped',e)}}if(!localStorage.getItem(KEY)&&state.entries.length){localStorage.setItem(KEY,JSON.stringify(state));}try{localStorage.setItem(META_KEY,JSON.stringify({schema:APP_SCHEMA_VERSION,updatedAt:new Date().toISOString()}));if(navigator.storage?.persist)await navigator.storage.persist();}catch(e){}await writeBackupSnapshot(JSON.stringify(state));}
 function save(){const raw=JSON.stringify(state);try{const previous=localStorage.getItem(KEY);if(previous&&previous!==raw)localStorage.setItem(BACKUP_KEY,previous);localStorage.setItem(KEY,raw);localStorage.setItem(META_KEY,JSON.stringify({schema:APP_SCHEMA_VERSION,updatedAt:new Date().toISOString()}));}catch(e){toast('Память устройства заполнена. Скачай резервную копию.');console.error(e)}writeBackupSnapshot(raw);render();}
 
@@ -298,8 +333,9 @@ $('addForm').addEventListener('submit',e=>{e.preventDefault();let q=Number($('qu
 function delEntry(id){if(!confirm('Удалить эту запись?'))return;state.entries=state.entries.filter(x=>String(x.id)!==String(id));state.pendingDeletes=[...new Set([...(state.pendingDeletes||[]),String(id)])];save();if(tgUser)flushCloudChanges().catch(e=>toast('Удалено на устройстве; облако обновится при подключении'));toast('Запись удалена')}
 function entryHTML(e){return `<div class="entry"><div class="canicon">$</div><div class="entrymain"><div class="entryname">${esc(e.brand)}</div><div class="entrymeta">${e.volume} · ${e.quantity} шт. · ${new Date(e.date+'T12:00:00').toLocaleDateString('ru-RU')}${e.note?' · '+esc(e.note):''}</div></div><div style="text-align:right"><div class="entryprice">${fmt(e.price*e.quantity)} ₽</div><button class="textbtn" onclick="delEntry(${e.id})">Удалить</button></div></div>`}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function render(){let es=state.entries,total=es.reduce((a,e)=>a+e.quantity,0),spent=es.reduce((a,e)=>a+e.quantity*e.price,0),month=es.filter(e=>e.date.slice(0,7)===dateISO().slice(0,7)),week=es.filter(e=>(Date.now()-new Date(e.date+'T00:00:00').getTime())<7*864e5 && new Date(e.date+'T00:00:00').getTime()<=Date.now());
-$('totalCans').innerHTML=fmt(total)+' <small>БАНОК</small>';$('totalSpent').textContent=fmt(spent)+' ₽';$('avgPrice').textContent=total?fmt(spent/total)+' ₽':'—';$('monthCans').textContent=month.reduce((a,e)=>a+e.quantity,0)+' за этот месяц';$('weekCans').textContent=week.reduce((a,e)=>a+e.quantity,0)+' банок';$('statMonth').textContent=fmt(month.reduce((a,e)=>a+e.quantity*e.price,0))+' ₽';
+function selectMonth(value){if(!/^\d{4}-\d{2}$/.test(value))return;selectedMonth=value;render()}
+function render(){let es=state.entries,total=es.reduce((a,e)=>a+e.quantity,0),spent=es.reduce((a,e)=>a+e.quantity*e.price,0),month=es.filter(e=>e.date.slice(0,7)===selectedMonth),week=es.filter(e=>(Date.now()-new Date(e.date+'T00:00:00').getTime())<7*864e5 && new Date(e.date+'T00:00:00').getTime()<=Date.now());
+$('totalCans').innerHTML=fmt(total)+' <small>БАНОК</small>';$('totalSpent').textContent=fmt(spent)+' ₽';$('avgPrice').textContent=total?fmt(spent/total)+' ₽':'—';$('monthPicker').value=selectedMonth;$('monthCans').textContent=month.reduce((a,e)=>a+e.quantity,0)+' за '+new Date(selectedMonth+'-01T12:00:00').toLocaleDateString('ru-RU',{month:'long'});$('monthSpendLabel').textContent='Расходы · '+new Date(selectedMonth+'-01T12:00:00').toLocaleDateString('ru-RU',{month:'long',year:'numeric'});$('monthSpendCount').textContent=fmt(month.reduce((a,e)=>a+e.quantity,0))+' энергетиков';$('weekCans').textContent=week.reduce((a,e)=>a+e.quantity,0)+' банок';$('statMonth').textContent=fmt(month.reduce((a,e)=>a+e.quantity*e.price,0))+' ₽';
 let brands={};es.forEach(e=>brands[e.brand]=(brands[e.brand]||0)+e.quantity);let top=Object.entries(brands).sort((a,b)=>b[1]-a[1])[0];$('topBrand').textContent=top?top[0]:'—';
 $('recentList').innerHTML=es.length?es.slice(0,3).map(entryHTML).join(''):'<div class="empty">Пока чисто. Подозрительно.<br>Добавь первую банку — начнём вести бухгалтерию.</div>';
 $('historyList').innerHTML=es.length?es.map(entryHTML).join(''):'<div class="empty">История пока пустая.</div>';
