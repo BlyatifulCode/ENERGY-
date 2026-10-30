@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#171719">
+<title>ENERGY$ — tracker</title>
+<style>
+:root{--bg:#171719;--panel:#222225;--panel2:#29292d;--line:#38383d;--text:#eeeae5;--muted:#969397;--orange:#f07836;--orange2:#ff9a5c;--danger:#e35e54;--radius:19px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+button,input,select{font:inherit}button{cursor:pointer}
+.app{max-width:480px;margin:auto;min-height:100vh;padding:18px 16px calc(96px + env(safe-area-inset-bottom));}
+.top{display:flex;align-items:center;justify-content:space-between;margin:6px 2px 25px}
+.logo{font-size:24px;font-weight:950;letter-spacing:-1.7px}.logo span{color:var(--orange)}
+.user{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:12px}.avatar{width:34px;height:34px;border-radius:50%;background:#343438;display:grid;place-items:center;color:var(--orange);font-weight:800}
+.eyebrow{color:var(--muted);font-size:10px;letter-spacing:1.7px;text-transform:uppercase;font-weight:700}
+h1{font-size:29px;line-height:1.08;letter-spacing:-1.1px;margin:9px 0 5px}.sub{font-size:13px;color:var(--muted);line-height:1.5}
+.hero{background:linear-gradient(145deg,#2b2928,#222225 62%);border:1px solid #3b3735;border-radius:24px;padding:20px;position:relative;overflow:hidden;margin:18px 0 12px}
+.hero:after{content:"$";position:absolute;right:12px;top:-26px;font-size:150px;line-height:1;color:rgba(240,120,54,.08);font-weight:950;pointer-events:none}
+.hero .count{font-size:55px;font-weight:900;letter-spacing:-3px;margin:7px 0 0}.hero .count small{font-size:13px;letter-spacing:1px;color:var(--muted);font-weight:700}
+.herofoot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:12px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.stat,.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:15px}
+.stat .value{font-size:22px;font-weight:850;margin-top:8px;letter-spacing:-.6px}.stat .hint{font-size:11px;color:var(--muted);margin-top:4px}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;margin:24px 2px 11px}.sectionhead h2{font-size:16px;margin:0;letter-spacing:-.3px}.textbtn{border:0;background:none;color:var(--orange);font-size:12px;font-weight:700;padding:6px}
+.primary{width:100%;border:0;border-radius:15px;padding:16px;background:var(--orange);color:#1c1714;font-weight:900;font-size:14px;letter-spacing:.25px;box-shadow:0 8px 24px #f0783620}
+.primary:active{transform:scale(.985)}.secondary{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;padding:11px 13px;font-size:12px;font-weight:700}
+.entry{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.entry:last-child{border:0}.canicon{width:42px;height:48px;border-radius:10px;background:#343438;display:grid;place-items:center;color:var(--orange);font-size:18px;font-weight:900}
+.entrymain{flex:1;min-width:0}.entryname{font-weight:750;font-size:13px}.entrymeta{color:var(--muted);font-size:11px;margin-top:4px}.entryprice{font-size:13px;font-weight:800}
+.empty{text-align:center;padding:26px 10px;color:var(--muted);font-size:13px;line-height:1.6}
+.nav{position:fixed;z-index:5;bottom:0;left:50%;transform:translateX(-50%);width:min(480px,100%);padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:#1d1d20ed;backdrop-filter:blur(18px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.nav button{border:0;background:none;color:var(--muted);padding:8px 2px;border-radius:12px;font-size:10px;font-weight:700}.nav button b{display:block;font-size:18px;margin-bottom:4px}.nav button.active{background:#33271f;color:var(--orange)}
+.page{display:none}.page.active{display:block}
+.paneltitle{font-size:25px;letter-spacing:-.8px;margin:10px 0 5px}.muted{color:var(--muted)}
+.listbox{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:0 14px}
+.field{display:flex;flex-direction:column;gap:7px;margin:13px 0}.field label{font-size:11px;color:var(--muted);font-weight:700}.field input,.field select{width:100%;border:1px solid var(--line);background:#19191c;color:var(--text);border-radius:12px;padding:13px;outline:none}.field input:focus,.field select:focus{border-color:var(--orange)}
+.row{display:flex;gap:10px}.row>*{flex:1;min-width:0}
+.modal{display:none;position:fixed;inset:0;background:#000a;z-index:10;align-items:flex-end;justify-content:center}.modal.open{display:flex}.sheet{width:min(480px,100%);background:#222225;border:1px solid var(--line);border-radius:24px 24px 0 0;padding:21px 18px calc(22px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}.sheethead{display:flex;justify-content:space-between;align-items:center}.sheet h2{margin:0;font-size:20px}.close{border:0;background:#343438;color:var(--text);width:32px;height:32px;border-radius:50%;font-size:18px}
+.toggle{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);gap:15px}.toggle:last-child{border:0}.toggle strong{font-size:13px}.toggle small{display:block;color:var(--muted);font-size:11px;margin-top:4px}.switch{width:44px;height:25px;border-radius:30px;background:#4a494d;position:relative;border:0;flex:none}.switch:after{content:"";position:absolute;width:19px;height:19px;background:#eee;border-radius:50%;left:3px;top:3px;transition:.2s}.switch.on{background:var(--orange)}.switch.on:after{left:22px;background:#211914}
+.barwrap{height:130px;display:flex;align-items:end;gap:8px;padding:15px 2px 0}.barcol{flex:1;text-align:center;min-width:0}.bar{background:linear-gradient(180deg,var(--orange2),var(--orange));border-radius:7px 7px 3px 3px;min-height:3px}.barlabel{font-size:9px;color:var(--muted);margin-top:7px}
+.notice{background:#30251f;border:1px solid #59402f;color:#d9b39a;border-radius:13px;padding:12px;font-size:11px;line-height:1.5;margin-top:14px}
+.toast{position:fixed;bottom:90px;left:50%;transform:translate(-50%,15px);opacity:0;background:#eeeae5;color:#171719;padding:11px 16px;border-radius:30px;font-size:12px;font-weight:800;z-index:20;transition:.2s;pointer-events:none;white-space:nowrap}.toast.show{opacity:1;transform:translate(-50%,0)}
+.smallcaps{font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:800}
+@media(min-width:600px){body{padding:22px 0}.app{border:1px solid #303034;border-radius:28px;min-height:calc(100vh - 44px);padding-bottom:35px}.nav{position:sticky;transform:none;left:auto;width:100%;border:1px solid var(--line);border-radius:16px;margin-top:20px;bottom:auto}.modal{align-items:center}.sheet{border-radius:24px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="logo">ENERGY<span>$</span></div>
+    <div class="user"><div class="avatar" id="avatar">Г</div><span id="username">Гость режима</span></div>
+  </header>
+
+  <main>
+    <section class="page active" id="home">
+      <div class="eyebrow">Личный журнал потребления</div>
+      <h1>Ну что,<br>опять?</h1>
+      <div class="sub" id="mood">Финансовая дисциплина вышла из чата.</div>
+      <div class="hero">
+        <div class="eyebrow">Всего зафиксировано</div>
+        <div class="count" id="totalCans">0 <small>БАНОК</small></div>
+        <div class="herofoot"><span id="monthCans">0 за этот месяц</span><span>● учёт активен</span></div>
+      </div>
+      <div class="grid">
+        <div class="stat"><div class="eyebrow">Потрачено всего</div><div class="value" id="totalSpent">0 ₽</div><div class="hint">Деньги испарились красиво</div></div>
+        <div class="stat"><div class="eyebrow">Средняя цена</div><div class="value" id="avgPrice">—</div><div class="hint">За одну банку</div></div>
+        <div class="stat"><div class="eyebrow">За 7 дней</div><div class="value" id="weekCans">0 банок</div><div class="hint">Неделя под контролем?</div></div>
+        <div class="stat"><div class="eyebrow">Любимый бренд</div><div class="value" id="topBrand">—</div><div class="hint">Постоянный клиент</div></div>
+      </div>
+      <button class="primary" onclick="openAdd()">＋ ЗАФИКСИРОВАТЬ БАНКУ</button>
+      <div class="sectionhead"><h2>Последние залёты</h2><button class="textbtn" onclick="go('history')">Вся история →</button></div>
+      <div class="listbox" id="recentList"><div class="empty">Пока чисто. Подозрительно.<br>Добавь первую банку — начнём вести бухгалтерию.</div></div>
+      <div class="notice">ENERGY$ — личный журнал расходов и потребления. Не медицинский трекер и не повод соревноваться в количестве.</div>
+    </section>
+
+    <section class="page" id="history">
+      <div class="eyebrow">Архив решений</div><h1 class="paneltitle">История</h1><div class="sub">Каждая банка оставляет финансовый след.</div>
+      <div class="sectionhead"><h2>Все записи</h2><button class="textbtn" onclick="openAdd()">＋ Добавить</button></div>
+      <div class="listbox" id="historyList"><div class="empty">История пока пустая.</div></div>
+    </section>
+
+    <section class="page" id="stats">
+      <div class="eyebrow">Цифры не врут</div><h1 class="paneltitle">Статистика</h1><div class="sub">Считаем банки, деньги и последствия для бюджета.</div>
+      <div class="grid">
+        <div class="stat"><div class="eyebrow">За месяц</div><div class="value" id="statMonth">0 ₽</div><div class="hint">Расходы</div></div>
+        <div class="stat"><div class="eyebrow">За всё время</div><div class="value" id="statAll">0 ₽</div><div class="hint">Общие расходы</div></div>
+      </div>
+      <div class="card"><div class="eyebrow">Банки за последние 7 дней</div><div class="barwrap" id="weekChart"></div></div>
+      <div class="sectionhead"><h2>Разбивка по брендам</h2></div>
+      <div class="listbox" id="brandList"><div class="empty">Данных пока нет.</div></div>
+      <div class="notice">Статистика основана на записях, которые ты добавил вручную. Никакой магии — только честная арифметика.</div>
+    </section>
+
+    <section class="page" id="friends">
+      <div class="eyebrow">Социальная бухгалтерия</div><h1 class="paneltitle">Кореша</h1><div class="sub">Добавь друзей и решай сам, чем делиться.</div>
+      <div class="card" style="margin-top:18px">
+        <div class="eyebrow">Твоя пригласительная ссылка</div>
+        <div style="font-size:13px;font-weight:750;margin:10px 0" id="inviteText">ENERGY$ — тестовый режим</div>
+        <button class="secondary" style="width:100%" onclick="copyInvite()">Скопировать приглашение</button>
+      </div>
+      <div class="sectionhead"><h2>Доступ к статистике</h2></div>
+      <div class="card">
+        <div class="toggle"><div><strong>Показывать количество банок</strong><small>Друзья смогут видеть общий счётчик</small></div><button class="switch" id="privacyCans" onclick="togglePrivacy('cans')"></button></div>
+        <div class="toggle"><div><strong>Показывать расходы</strong><small>Сколько денег ушло на напитки</small></div><button class="switch" id="privacyMoney" onclick="togglePrivacy('money')"></button></div>
+        <div class="toggle"><div><strong>Показывать историю</strong><small>Отдельные записи и напитки</small></div><button class="switch" id="privacyHistory" onclick="togglePrivacy('history')"></button></div>
+        <div class="toggle"><div><strong>Участвовать в рейтингах</strong><small>Только если захочешь сравниваться</small></div><button class="switch" id="privacyRank" onclick="togglePrivacy('rank')"></button></div>
+      </div>
+      <div class="notice">В этой тестовой версии настройки сохраняются на устройстве. Реальные друзья, приглашения и синхронизация появятся после подключения Telegram и сервера.</div>
+    </section>
+
+    <section class="page" id="settings">
+      <div class="eyebrow">Настройки</div><h1 class="paneltitle">Профиль</h1><div class="sub">Тут всё под твоим контролем.</div>
+      <div class="card" style="margin-top:18px">
+        <div class="eyebrow">Имя в тестовом режиме</div>
+        <div class="field"><label>Как к тебе обращаться</label><input id="nameInput" maxlength="32" placeholder="Например, Гость"></div>
+        <button class="secondary" style="width:100%" onclick="saveName()">Сохранить имя</button>
+      </div>
+      <div class="sectionhead"><h2>Данные</h2></div>
+      <div class="card">
+        <button class="secondary" style="width:100%;margin-bottom:9px" onclick="exportData()">Выгрузить записи (JSON)</button>
+        <button class="secondary" style="width:100%;color:#ff8a80" onclick="clearData()">Удалить все записи</button>
+      </div>
+      <div class="notice">Сейчас ENERGY$ работает автономно в браузере. После интеграции имя и аватар будут подтягиваться из Telegram, а данные — храниться в аккаунте.</div>
+      <div class="smallcaps" style="margin:22px 2px">ENERGY$ · TEST BUILD 0.1</div>
+    </section>
+  </main>
+</div>
+
+<nav class="nav">
+  <button class="active" data-page="home" onclick="go('home')"><b>⌂</b>Главная</button>
+  <button data-page="history" onclick="go('history')"><b>≡</b>История</button>
+  <button data-page="stats" onclick="go('stats')"><b>▥</b>Статистика</button>
+  <button data-page="friends" onclick="go('friends')"><b>♧</b>Кореша</button>
+</nav>
+
+<div class="modal" id="addModal" onclick="if(event.target===this)closeAdd()">
+ <div class="sheet">
+  <div class="sheethead"><h2>Зафиксировать залёт</h2><button class="close" onclick="closeAdd()">×</button></div>
+  <div class="sub" style="margin-top:6px">Бухгалтерия сама себя не заполнит.</div>
+  <form id="addForm">
+   <div class="field"><label>Название / бренд</label><input id="brand" list="brands" placeholder="Например, Monster" required maxlength="40"><datalist id="brands"><option>Monster</option><option>Red Bull</option><option>Adrenaline Rush</option><option>Burn</option><option>Flash</option><option>Drive</option><option>Другой</option></datalist></div>
+   <div class="row"><div class="field"><label>Объём</label><select id="volume"><option>250 мл</option><option>330 мл</option><option>450 мл</option><option selected>500 мл</option><option>Другой</option></select></div><div class="field"><label>Количество</label><input id="quantity" type="number" min="1" max="99" value="1" required></div></div>
+   <div class="row"><div class="field"><label>Цена за банку, ₽</label><input id="price" type="number" min="0" step="0.01" placeholder="Например, 119" required></div><div class="field"><label>Дата</label><input id="date" type="date" required></div></div>
+   <div class="field"><label>Комментарий (необязательно)</label><input id="note" maxlength="100" placeholder="Ночная смена, тяжёлый день..."></div>
+   <button class="primary" type="submit">СОХРАНИТЬ ЗАПИСЬ</button>
+  </form>
+ </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const KEY='energydollar_test_v1';
+let state=JSON.parse(localStorage.getItem(KEY)||'null')||{entries:[],name:'Гость режима',privacy:{cans:false,money:false,history:false,rank:false}};
+const $=id=>document.getElementById(id);
+const fmt=n=>new Intl.NumberFormat('ru-RU',{maximumFractionDigits:2}).format(n);
+const dateISO=()=>new Date().toISOString().slice(0,10);
+function save(){localStorage.setItem(KEY,JSON.stringify(state));render()}
+function toast(s){let t=$('toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1900)}
+function go(page){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===page));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));if(page==='settings')$('nameInput').value=state.name}
+function openAdd(){$('date').value=dateISO();$('addModal').classList.add('open')}
+function closeAdd(){$('addModal').classList.remove('open')}
+$('addForm').addEventListener('submit',e=>{e.preventDefault();let q=Number($('quantity').value),p=Number($('price').value);if(!q||q<1||p<0||!Number.isFinite(p)){toast('Проверь количество и цену');return}state.entries.unshift({id:Date.now(),brand:$('brand').value.trim(),volume:$('volume').value,quantity:q,price:p,date:$('date').value,note:$('note').value.trim()});save();closeAdd();$('addForm').reset();toast('Запись сохранена. Финансы плачут.')});
+function delEntry(id){if(!confirm('Удалить эту запись?'))return;state.entries=state.entries.filter(x=>x.id!==id);save();toast('Запись удалена')}
+function entryHTML(e){return `<div class="entry"><div class="canicon">$</div><div class="entrymain"><div class="entryname">${esc(e.brand)}</div><div class="entrymeta">${e.volume} · ${e.quantity} шт. · ${new Date(e.date+'T12:00:00').toLocaleDateString('ru-RU')}${e.note?' · '+esc(e.note):''}</div></div><div style="text-align:right"><div class="entryprice">${fmt(e.price*e.quantity)} ₽</div><button class="textbtn" onclick="delEntry(${e.id})">Удалить</button></div></div>`}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function render(){let es=state.entries,total=es.reduce((a,e)=>a+e.quantity,0),spent=es.reduce((a,e)=>a+e.quantity*e.price,0),month=es.filter(e=>e.date.slice(0,7)===dateISO().slice(0,7)),week=es.filter(e=>(Date.now()-new Date(e.date+'T00:00:00').getTime())<7*864e5 && new Date(e.date+'T00:00:00').getTime()<=Date.now());
+$('totalCans').innerHTML=fmt(total)+' <small>БАНОК</small>';$('totalSpent').textContent=fmt(spent)+' ₽';$('avgPrice').textContent=total?fmt(spent/total)+' ₽':'—';$('monthCans').textContent=month.reduce((a,e)=>a+e.quantity,0)+' за этот месяц';$('weekCans').textContent=week.reduce((a,e)=>a+e.quantity,0)+' банок';$('statMonth').textContent=fmt(month.reduce((a,e)=>a+e.quantity*e.price,0))+' ₽';$('statAll').textContent=fmt(spent)+' ₽';
+let brands={};es.forEach(e=>brands[e.brand]=(brands[e.brand]||0)+e.quantity);let top=Object.entries(brands).sort((a,b)=>b[1]-a[1])[0];$('topBrand').textContent=top?top[0]:'—';
+$('recentList').innerHTML=es.length?es.slice(0,3).map(entryHTML).join(''):'<div class="empty">Пока чисто. Подозрительно.<br>Добавь первую банку — начнём вести бухгалтерию.</div>';
+$('historyList').innerHTML=es.length?es.map(entryHTML).join(''):'<div class="empty">История пока пустая.</div>';
+$('brandList').innerHTML=top?Object.entries(brands).sort((a,b)=>b[1]-a[1]).map(([n,c])=>`<div class="entry"><div class="entrymain"><div class="entryname">${esc(n)}</div><div class="entrymeta">${c} банок</div></div><strong>${fmt(c/total*100)}%</strong></div>`).join(''):'<div class="empty">Данных пока нет.</div>';
+let days=[];for(let i=6;i>=0;i--){let d=new Date();d.setDate(d.getDate()-i);let iso=d.toISOString().slice(0,10);days.push({label:d.toLocaleDateString('ru-RU',{weekday:'short'}),n:es.filter(e=>e.date===iso).reduce((a,e)=>a+e.quantity,0)})}let max=Math.max(1,...days.map(x=>x.n));$('weekChart').innerHTML=days.map(d=>`<div class="barcol"><div class="bar" style="height:${Math.max(3,d.n/max*85)}px"></div><div class="barlabel">${d.label}<br>${d.n}</div></div>`).join('');
+$('username').textContent=state.name;$('avatar').textContent=(state.name.trim()[0]||'Г').toUpperCase();['cans','money','history','rank'].forEach(k=>$('privacy'+k[0].toUpperCase()+k.slice(1)).classList.toggle('on',!!state.privacy[k]));
+}
+function saveName(){state.name=$('nameInput').value.trim()||'Гость режима';save();toast('Имя сохранено')}
+function togglePrivacy(k){state.privacy[k]=!state.privacy[k];save();toast('Настройка приватности обновлена')}
+function copyInvite(){let text='Залетай в ENERGY$ — будем вести учёт энергетиков и расходов.';if(navigator.clipboard?.writeText)navigator.clipboard.writeText(text).then(()=>toast('Приглашение скопировано')).catch(()=>toast(text));else toast(text)}
+function exportData(){let blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='energydollar-data.json';a.click();URL.revokeObjectURL(a.href)}
+function clearData(){if(!confirm('Точно удалить все записи? Это действие нельзя отменить.'))return;state.entries=[];save();toast('Все записи удалены')}
+render();
+</script>
+</body></html>
