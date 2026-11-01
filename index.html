@@ -37,7 +37,7 @@ h1{font-size:29px;line-height:1.08;letter-spacing:-1.1px;margin:9px 0 5px}.sub{f
 .listbox{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:0 14px}
 .field{display:flex;flex-direction:column;gap:7px;margin:13px 0}.field label{font-size:11px;color:var(--muted);font-weight:700}.field input,.field select{width:100%;border:1px solid var(--line);background:#19191c;color:var(--text);border-radius:12px;padding:13px;outline:none}.field input:focus,.field select:focus{border-color:var(--orange)}
 .row{display:flex;gap:10px}.row>*{flex:1;min-width:0}
-.modal{display:none;position:fixed;inset:0;background:#000a;z-index:10;align-items:flex-end;justify-content:center}.modal.open{display:flex}.sheet{width:min(480px,100%);background:#222225;border:1px solid var(--line);border-radius:24px 24px 0 0;padding:21px 18px calc(22px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}.sheethead{display:flex;justify-content:space-between;align-items:center}.sheet h2{margin:0;font-size:20px}.close{border:0;background:#343438;color:var(--text);width:32px;height:32px;border-radius:50%;font-size:18px}
+.modal{display:none;position:fixed;inset:0;background:#000a;z-index:50;align-items:flex-end;justify-content:center}.modal.open{display:flex}.sheet{width:min(480px,100%);background:#222225;border:1px solid var(--line);border-radius:24px 24px 0 0;padding:21px 18px calc(22px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}.sheethead{display:flex;justify-content:space-between;align-items:center}.sheet h2{margin:0;font-size:20px}.close{border:0;background:#343438;color:var(--text);width:32px;height:32px;border-radius:50%;font-size:18px}
 .toggle{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);gap:15px}.toggle:last-child{border:0}.toggle strong{font-size:13px}.toggle small{display:block;color:var(--muted);font-size:11px;margin-top:4px}.switch{width:44px;height:25px;border-radius:30px;background:#4a494d;position:relative;border:0;flex:none}.switch:after{content:"";position:absolute;width:19px;height:19px;background:#eee;border-radius:50%;left:3px;top:3px;transition:.2s}.switch.on{background:var(--orange)}.switch.on:after{left:22px;background:#211914}
 .barwrap{height:130px;display:flex;align-items:end;gap:8px;padding:15px 2px 0}.barcol{flex:1;text-align:center;min-width:0}.bar{background:linear-gradient(180deg,var(--orange2),var(--orange));border-radius:7px 7px 3px 3px;min-height:3px}.barlabel{font-size:9px;color:var(--muted);margin-top:7px}
 .notice{background:#30251f;border:1px solid #59402f;color:#d9b39a;border-radius:13px;padding:12px;font-size:11px;line-height:1.5;margin-top:14px}
@@ -163,6 +163,25 @@ body.modal-open{overflow:hidden}
 @media(max-width:360px){.nav{width:calc(100% - 20px);bottom:calc(7px + env(safe-area-inset-bottom));padding:6px;gap:2px}.nav button{min-height:56px;font-size:9px;border-radius:18px}.nav button svg{width:21px;height:21px}}
 @media(prefers-reduced-motion:reduce){.nav button{transition:none}}
 
+/* Modal layering + scroll-safe action area for Telegram iOS WebView */
+.modal{z-index:50;isolation:isolate;padding-top:env(safe-area-inset-top)}
+.modal.open{display:flex}
+.sheet{
+  position:relative;z-index:51;display:flex;flex-direction:column;flex:0 1 auto;
+  max-height:calc(100dvh - env(safe-area-inset-top) - 8px);
+  max-height:calc(100vh - env(safe-area-inset-top) - 8px);
+  overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;scroll-padding-bottom:24px;
+  padding-bottom:calc(24px + env(safe-area-inset-bottom));
+}
+.sheet form{display:flex;flex-direction:column;min-height:0}
+#submitEntry{position:sticky;bottom:0;z-index:3;flex:none;width:100%;margin-top:12px;box-shadow:0 -10px 20px rgba(34,34,37,.88)}
+@media(max-width:600px){
+  .modal{align-items:flex-end}
+  .sheet{max-height:calc(100dvh - env(safe-area-inset-top) - 8px);border-radius:23px 23px 0 0}
+}
+
+
 /* ENERGY$ carbonation atmosphere — subtle animated fizz for mobile */
 body{position:relative;isolation:isolate;background:#121214;overflow-x:hidden}
 body:before,body:after{content:"";position:fixed;inset:-12%;z-index:-2;pointer-events:none}
@@ -204,55 +223,55 @@ body:after{
   <main>
     <section class="page active" id="home">
       <div class="eyebrow">Твой личный журнал</div>
-      <h1>Ну что,<br>опять?</h1>
-      <div class="sub" id="mood">Финансовая дисциплина вышла из чата.</div>
-      <div class="live-message" id="liveMessage" aria-live="polite"><span class="live-dot"></span><div><b>От приложения</b><p id="liveMessageText">Ну что, начинаем вести учёт. Бухгалтерия уже нервничает.</p></div></div>
+      <h1>Ну что,<br>кто тут у нас?</h1>
+      <div class="sub" id="mood">Зашёл посчитать банки. Держись, кошелёк.</div>
+      <div class="live-message" id="liveMessage" aria-live="polite"><span class="live-dot"></span><div><b>От приложения</b><p id="liveMessageText">Так, записываем. А то потом опять «куда деньги делись?»</p></div></div>
       <div class="hero">
-        <div class="eyebrow">Всего зафиксировано</div>
+        <div class="eyebrow">Всего выпито</div>
         <div class="count" id="totalCans">0 <small>БАНОК</small></div>
-        <div class="herofoot"><span id="monthCans">0 за этот месяц</span><span>● система активна</span></div>
+        <div class="herofoot"><span id="monthCans">0 за этот месяц</span><span>● всё под контролем (почти)</span></div>
       </div>
       <div class="month-filter card">
-        <div><div class="eyebrow">Показать расходы и банки за месяц</div><div class="hint">Выбери любой месяц</div></div>
+        <div><div class="eyebrow">Что было по деньгам?</div><div class="hint">Листай, вспоминай, ужасайся</div></div>
         <input id="monthPicker" type="month" aria-label="Выбрать месяц" onchange="selectMonth(this.value)">
       </div>
       <div class="grid">
-        <div class="stat"><div class="eyebrow">Потрачено всего</div><div class="value" id="totalSpent">0 ₽</div><div class="hint">Деньги испарились красиво</div></div>
+        <div class="stat"><div class="eyebrow">Ушло денег</div><div class="value" id="totalSpent">0 ₽</div><div class="hint">И ведь не на отпуск</div></div>
         <div class="stat"><div class="eyebrow" id="monthSpendLabel">Расходы за месяц</div><div class="value" id="statMonth">0 ₽</div><div class="hint" id="monthSpendCount">0 энергетиков</div></div>
-        <div class="stat"><div class="eyebrow">Средняя цена</div><div class="value" id="avgPrice">—</div><div class="hint">За одну банку</div></div>
-        <div class="stat"><div class="eyebrow">За 7 дней</div><div class="value" id="weekCans">0 банок</div><div class="hint">Неделя под контролем?</div></div>
-        <div class="stat" style="grid-column:1/-1"><div class="eyebrow">Любимый бренд</div><div class="value" id="topBrand">—</div><div class="hint">Постоянный клиент</div></div>
+        <div class="stat"><div class="eyebrow">Средняя цена банки</div><div class="value" id="avgPrice">—</div><div class="hint">Одна маленькая радость</div></div>
+        <div class="stat"><div class="eyebrow">За 7 дней</div><div class="value" id="weekCans">0 банок</div><div class="hint">Неделя как неделя…</div></div>
+        <div class="stat" style="grid-column:1/-1"><div class="eyebrow">Чаще всего брал</div><div class="value" id="topBrand">—</div><div class="hint">Скоро скидочную карту дадут</div></div>
       </div>
-      <button class="primary" onclick="openAdd()">＋ ЗАФИКСИРОВАТЬ БАНКУ</button>
+      <button class="primary" onclick="openAdd()">＋ ЗАПИСАТЬ ЕЩЁ ОДНУ</button>
       <div class="sectionhead"><h2>Последние 7 дней</h2></div>
-      <div class="card"><div class="eyebrow">Количество банок по дням</div><div class="barwrap" id="weekChart"></div></div>
-      <div class="sectionhead"><h2>По брендам</h2></div>
+      <div class="card"><div class="eyebrow">Сколько банок ушло по дням</div><div class="barwrap" id="weekChart"></div></div>
+      <div class="sectionhead"><h2>Кого спонсируем чаще</h2></div>
       <div class="listbox" id="brandList"><div class="empty">Данных пока нет.</div></div>
-      <div class="sectionhead"><h2>Последние залёты</h2><button class="textbtn" onclick="go('history')">Вся история →</button></div>
-      <div class="listbox" id="recentList"><div class="empty">Пока чисто. Подозрительно.<br>Добавь первую банку — начнём вести бухгалтерию.</div></div>
-      <div class="notice">ENERGY$ — личный журнал расходов и потребления. Не медицинский трекер и не повод соревноваться в количестве.</div>
+      <div class="sectionhead"><h2>Свежие поступления в организм</h2><button class="textbtn" onclick="go('history')">Показать всё →</button></div>
+      <div class="listbox" id="recentList"><div class="empty">Пока пусто. Либо ты молодец, либо просто забыл записать 😏</div></div>
+      <div class="notice">Тут просто считаем банки и деньги. Никаких оценок — мы не твоя мама.</div>
     </section>
 
     <section class="page" id="history">
-      <div class="eyebrow">Архив решений</div><h1 class="paneltitle">История</h1><div class="sub">Каждая банка оставляет финансовый след.</div>
+      <div class="eyebrow">Всё, что было выпито</div><h1 class="paneltitle">История</h1><div class="sub">Ничего не забываем. Особенно суммы.</div>
       <div class="sectionhead"><h2>Все записи</h2><button class="textbtn" onclick="openAdd()">＋ Добавить</button></div>
-      <div class="listbox" id="historyList"><div class="empty">История пока пустая.</div></div>
+      <div class="listbox" id="historyList"><div class="empty">Пока тут девственно чисто. Исправлять?</div></div>
     </section>
 
     <section class="page" id="settings">
       <div class="eyebrow">Настройки</div><h1 class="paneltitle">Профиль</h1><div class="sub">Тут всё под твоим контролем.</div>
       <div class="card" style="margin-top:18px">
-        <div class="eyebrow">Отображаемое имя</div>
-        <div class="field"><label>Как отображать твоё имя</label><input id="nameInput" maxlength="32" placeholder="Например, ENERGY$ user"></div>
+        <div class="eyebrow">Как тебя подписать</div>
+        <div class="field"><label>Имя в приложении</label><input id="nameInput" maxlength="32" placeholder="Например, просто Серёга"></div>
         <button class="secondary" style="width:100%" onclick="saveName()">Сохранить имя</button>
       </div>
       <div class="sectionhead"><h2>Данные</h2></div>
       <div class="card">
-        <button class="secondary" style="width:100%;margin-bottom:9px" onclick="exportData()">Скачать резервную копию</button>
-        <button class="secondary" style="width:100%;margin-bottom:9px" onclick="document.getElementById('restoreFile').click()">Восстановить из копии</button>
+        <button class="secondary" style="width:100%;margin-bottom:9px" onclick="exportData()">Скачать копию данных</button>
+        <button class="secondary" style="width:100%;margin-bottom:9px" onclick="document.getElementById('restoreFile').click()">Вернуть данные из копии</button>
         <input id="restoreFile" type="file" accept=".json,application/json" hidden onchange="importDataFile(event)">
         <div id="backupStatus" class="entrymeta" style="margin:5px 0 12px">Автосохранение на устройстве · резервные копии доступны ниже</div>
-        <button class="secondary" style="width:100%;color:#ff8a80" onclick="clearData()">Удалить все записи</button>
+        <button class="secondary" style="width:100%;color:#ff8a80" onclick="clearData()">Удалить всю историю</button>
       </div>
     </section>
   </main>
@@ -266,14 +285,14 @@ body:after{
 
 <div class="modal" id="addModal" onclick="if(event.target===this)closeAdd()">
  <div class="sheet">
-  <div class="sheethead"><h2 id="modalTitle">Зафиксировать залёт</h2><button class="close" onclick="closeAdd()">×</button></div>
-  <div class="sub" style="margin-top:6px">Бухгалтерия сама себя не заполнит.</div>
+  <div class="sheethead"><h2 id="modalTitle">Добавить банку</h2><button class="close" onclick="closeAdd()">×</button></div>
+  <div class="sub" style="margin-top:6px">Заполни пару полей — и свободен.</div>
   <form id="addForm">
-   <div class="field"><label>Название / бренд</label><input id="brand" list="brands" placeholder="Например, Monster" required maxlength="40"><datalist id="brands"><option>Monster</option><option>Red Bull</option><option>Adrenaline Rush</option><option>Burn</option><option>Flash</option><option>Drive</option><option>Другой</option></datalist></div>
+   <div class="field"><label>Что за напиток?</label><input id="brand" list="brands" placeholder="Например, Monster" required maxlength="40"><datalist id="brands"><option>Monster</option><option>Red Bull</option><option>Adrenaline Rush</option><option>Burn</option><option>Flash</option><option>Drive</option><option>Другой</option></datalist></div>
    <div class="row"><div class="field"><label>Объём</label><select id="volume"><option>250 мл</option><option>330 мл</option><option>450 мл</option><option selected>500 мл</option><option>Другой</option></select></div><div class="field"><label>Количество</label><input id="quantity" type="number" min="1" max="99" value="1" required></div></div>
-   <div class="row"><div class="field"><label>Цена за банку, ₽</label><input id="price" type="number" min="0" step="0.01" placeholder="Например, 119" required></div><div class="field"><label>Дата</label><input id="date" type="date" required></div></div>
-   <div class="field"><label>Комментарий (необязательно)</label><input id="note" maxlength="100" placeholder="Ночная смена, тяжёлый день..."></div>
-   <button class="primary" id="submitEntry" type="submit">СОХРАНИТЬ ЗАПИСЬ</button>
+   <div class="row"><div class="field"><label>Сколько стоила одна, ₽</label><input id="price" type="number" min="0" step="0.01" placeholder="Например, 119" required></div><div class="field"><label>Дата</label><input id="date" type="date" required></div></div>
+   <div class="field"><label>Примечание, если есть что вспомнить</label><input id="note" maxlength="100" placeholder="Например: купил по дороге домой"></div>
+   <button class="primary" id="submitEntry" type="submit">ЗАПИСАТЬ БАНКУ</button>
   </form>
  </div>
 </div></div>
@@ -305,7 +324,7 @@ function save(){const raw=JSON.stringify(state);try{const previous=localStorage.
 function toast(s){let t=$('toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1900)}
 function go(page){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===page));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));if(page==='settings')$('nameInput').value=state.name;}
 let editingEntryId=null;
-function openAdd(entryId=null){$('addForm').reset();$('quantity').value='1';$('date').value=dateISO();editingEntryId=entryId===null?null:String(entryId);if(editingEntryId!==null){const item=state.entries.find(x=>String(x.id)===editingEntryId);if(item){$('brand').value=item.brand||'';$('volume').value=item.volume||'Другой';$('quantity').value=String(item.quantity||1);$('price').value=String(item.price??'');$('date').value=item.date||dateISO();$('note').value=item.note||'';$('modalTitle').textContent='Изменить запись';$('submitEntry').textContent='СОХРАНИТЬ ИЗМЕНЕНИЯ';}}else{$('modalTitle').textContent='Зафиксировать залёт';$('submitEntry').textContent='СОХРАНИТЬ ЗАПИСЬ';}$('addModal').classList.add('open');document.body.style.overflow='hidden'}
+function openAdd(entryId=null){$('addForm').reset();$('quantity').value='1';$('date').value=dateISO();editingEntryId=entryId===null?null:String(entryId);if(editingEntryId!==null){const item=state.entries.find(x=>String(x.id)===editingEntryId);if(item){$('brand').value=item.brand||'';$('volume').value=item.volume||'Другой';$('quantity').value=String(item.quantity||1);$('price').value=String(item.price??'');$('date').value=item.date||dateISO();$('note').value=item.note||'';$('modalTitle').textContent='Изменить запись';$('submitEntry').textContent='СОХРАНИТЬ';}}else{$('modalTitle').textContent='Добавить банку';$('submitEntry').textContent='ЗАПИСАТЬ БАНКУ';}$('addModal').classList.add('open');document.body.style.overflow='hidden'}
 function closeAdd(){$('addModal').classList.remove('open');document.body.style.overflow=''}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('addModal').classList.contains('open'))closeAdd()});
 $('addForm').addEventListener('submit',e=>{e.preventDefault();const brand=$('brand').value.trim(),q=Number($('quantity').value),p=Number($('price').value),date=$('date').value;if(!brand){toast('Напиши название напитка');$('brand').focus();return}if(!Number.isInteger(q)||q<1||q>99){toast('Количество — от 1 до 99 банок');$('quantity').focus();return}if($('price').value.trim()===''||!Number.isFinite(p)||p<0){toast('Укажи корректную цену');$('price').focus();return}if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||Number.isNaN(new Date(date+'T12:00:00').getTime())){toast('Проверь дату');$('date').focus();return}const item={id:editingEntryId??Math.max(Date.now(),...state.entries.map(x=>Number(x.id)||0).filter(Number.isFinite))+1,brand,volume:$('volume').value,quantity:q,price:p,date,note:$('note').value.trim()};if(editingEntryId!==null){state.entries=state.entries.map(x=>String(x.id)===editingEntryId?item:x);toast('Запись обновлена')}else{state.entries.unshift(item)}save();if(tgUser)apiRequest('sync_entries',{entries:[item]}).catch(err=>{console.warn('Cloud write deferred',err);toast('Запись сохранена на устройстве; облако пока недоступно')});closeAdd();editingEntryId=null;showLiveMessage('added')});
@@ -316,17 +335,17 @@ function selectMonth(value){if(!/^\d{4}-\d{2}$/.test(value))return;selectedMonth
 function render(){let es=state.entries,total=es.reduce((a,e)=>a+e.quantity,0),spent=es.reduce((a,e)=>a+e.quantity*e.price,0),month=es.filter(e=>e.date.slice(0,7)===selectedMonth),week=es.filter(e=>{const t=new Date(e.date+'T12:00:00');const start=new Date();start.setHours(0,0,0,0);start.setDate(start.getDate()-6);return !Number.isNaN(t.getTime())&&t>=start&&t<=new Date();});
 $('totalCans').innerHTML=fmt(total)+' <small>БАНОК</small>';$('totalSpent').textContent=fmt(spent)+' ₽';$('avgPrice').textContent=total?fmt(spent/total)+' ₽':'—';$('monthPicker').value=selectedMonth;$('monthCans').textContent=month.reduce((a,e)=>a+e.quantity,0)+' за '+new Date(selectedMonth+'-01T12:00:00').toLocaleDateString('ru-RU',{month:'long'});$('monthSpendLabel').textContent='Расходы · '+new Date(selectedMonth+'-01T12:00:00').toLocaleDateString('ru-RU',{month:'long',year:'numeric'});$('monthSpendCount').textContent=fmt(month.reduce((a,e)=>a+e.quantity,0))+' энергетиков';$('weekCans').textContent=week.reduce((a,e)=>a+e.quantity,0)+' банок';$('statMonth').textContent=fmt(month.reduce((a,e)=>a+e.quantity*e.price,0))+' ₽';
 let brands={};es.forEach(e=>brands[e.brand]=(brands[e.brand]||0)+e.quantity);let top=Object.entries(brands).sort((a,b)=>b[1]-a[1])[0];$('topBrand').textContent=top?top[0]:'—';
-$('recentList').innerHTML=es.length?es.slice(0,3).map(entryHTML).join(''):'<div class="empty">Пока чисто. Подозрительно.<br>Добавь первую банку — начнём вести бухгалтерию.</div>';
-$('historyList').innerHTML=es.length?es.map(entryHTML).join(''):'<div class="empty">История пока пустая.</div>';
+$('recentList').innerHTML=es.length?es.slice(0,3).map(entryHTML).join(''):'<div class="empty">Пока пусто. Либо ты молодец, либо просто забыл записать 😏</div>';
+$('historyList').innerHTML=es.length?es.map(entryHTML).join(''):'<div class="empty">Пока тут девственно чисто. Исправлять?</div>';
 $('brandList').innerHTML=top?Object.entries(brands).sort((a,b)=>b[1]-a[1]).map(([n,c])=>`<div class="entry"><div class="entrymain"><div class="entryname">${esc(n)}</div><div class="entrymeta">${c} банок</div></div><strong>${fmt(c/total*100)}%</strong></div>`).join(''):'<div class="empty">Данных пока нет.</div>';
 let days=[];for(let i=6;i>=0;i--){let d=new Date();d.setDate(d.getDate()-i);let iso=dateISO(d);days.push({label:d.toLocaleDateString('ru-RU',{weekday:'short'}),n:es.filter(e=>e.date===iso).reduce((a,e)=>a+e.quantity,0)})}let max=Math.max(1,...days.map(x=>x.n));$('weekChart').innerHTML=days.map(d=>`<div class="barcol"><div class="bar" style="height:${Math.max(3,d.n/max*85)}px"></div><div class="barlabel">${d.label}<br>${d.n}</div></div>`).join('');
 $('username').textContent=state.name;$('avatar').textContent=(state.name.trim()[0]||'Г').toUpperCase();
 }
 const liveLines={
-  added:['Ну всё, понеслась. Запись принята.','Банку записал. Совесть свободна.','Опять ты за своё 😂','Кассир уже узнаёт тебя по походке.','Финансовый отдел просил не смотреть ему в глаза.'],
-  spend:['Бля, а деньги-то настоящие были.','На эти деньги можно было нормально пожрать.','Финансовый отдел просил передать: хорош.','Деньги ушли красиво. Без свидетелей.'],
-  quiet:['Тут пока тихо. Даже холодильник расслабился.','Давно ничего не записывал. Или память подводит?','Сегодня без новых записей. Подозрительно спокойно.'],
-  normal:['Ну что, ведём учёт или опять надеемся на память?','Бухгалтерия открыта. Ответственность — по желанию.','Главное — записывать. Осуждать будем потом.']
+  added:['Ну всё, записали. Теперь можно делать вид, что так и было задумано.','Банка внесена в протокол. Свидетелей нет.','Опять зашёл за одной? Конечно-конечно.','Записал. Кошелёк попросил передать: «ну пожалуйста».','Вот и ещё одна. Коллекция сама себя не соберёт.','Готово. Теперь хотя бы знаем, куда делись деньги.','Банка учтена. Продавец уже кивает тебе как знакомому.'],
+  spend:['Посмотрел сумму? Ну… зато вкус был знакомый.','Деньги не пропали. Они просто стали напитком.','На эти деньги можно было взять что-нибудь полезное. Но мы здесь не за этим.','Кошелёк сейчас тихо закрыл приложение.','Сумма такая, будто ты покупал не банки, а маленькие холодильники.'],
+  quiet:['Давно ничего не записывал. Или жизнь наладилась, или память — нет.','Тишина. Даже холодильник перестал осуждать.','Новых записей нет. Не будем задавать лишних вопросов.','Ты пропал. Надеюсь, хотя бы не у полки с энергетиками.'],
+  normal:['Ну что, опять считаем последствия вчерашнего?','Здесь можно честно. Мы всё равно никому не расскажем.','Веди записи, а то потом будешь вспоминать по чекам.','Приложение открыто. Значит, совесть ещё не совсем спит.','Добро пожаловать обратно. Банки сами себя не посчитают.']
 };
 let lastLiveLine='';
 function showMonthMessage(){
@@ -334,7 +353,7 @@ function showMonthMessage(){
  const cans=rows.reduce((a,e)=>a+Number(e.quantity||0),0);
  const spent=rows.reduce((a,e)=>a+Number(e.quantity||0)*Number(e.price||0),0);
  const monthName=new Date(selectedMonth+'-01T12:00:00').toLocaleDateString('ru-RU',{month:'long'});
- let line=!rows.length?`В ${monthName} пока пусто. Хоть где-то финансовая дисциплина.`:spent>=3000?`В ${monthName} улетело ${fmt(spent)} ₽. Бля, чек лучше не показывать.`:`В ${monthName} набралось ${cans} банок на ${fmt(spent)} ₽. Всё записано, отмазки не принимаются.`;
+ let line=!rows.length?`В ${monthName} записей пока нет. Либо образумился, либо забыл внести.`:spent>=3000?`В ${monthName} оставил ${fmt(spent)} ₽. Чек лучше убрать подальше.`:`В ${monthName} набралось ${cans} банок на ${fmt(spent)} ₽. Ну, хотя бы теперь знаем цифры.`;
  const node=$('liveMessageText');if(node)node.textContent=line;
 }
 function showLiveMessage(reason='normal'){
