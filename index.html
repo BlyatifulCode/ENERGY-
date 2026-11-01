@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#171719">
 <title>ENERGY$ — tracker</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -16,6 +16,7 @@ button,input,select{font:inherit}button{cursor:pointer}
 .user{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:12px}.avatar{width:34px;height:34px;border-radius:50%;background:#343438;display:grid;place-items:center;color:var(--orange);font-weight:800}
 .eyebrow{color:var(--muted);font-size:10px;letter-spacing:1.7px;text-transform:uppercase;font-weight:700}
 h1{font-size:29px;line-height:1.08;letter-spacing:-1.1px;margin:9px 0 5px}.sub{font-size:13px;color:var(--muted);line-height:1.5}
+.live-message{display:flex;align-items:flex-start;gap:10px;padding:13px 14px;margin:14px 0 12px;border:1px solid rgba(240,120,54,.22);border-radius:16px;background:linear-gradient(110deg,rgba(240,120,54,.10),rgba(41,41,45,.78));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);animation:riseIn .35s ease both}.live-dot{width:8px;height:8px;flex:none;margin-top:5px;border-radius:50%;background:var(--orange);box-shadow:0 0 10px #f0783680}.live-message b{font-size:11px;color:var(--orange);letter-spacing:.3px}.live-message p{margin:4px 0 0;font-size:13px;line-height:1.4;color:var(--text)}
 .hero{background:linear-gradient(145deg,#2b2928,#222225 62%);border:1px solid #3b3735;border-radius:24px;padding:20px;position:relative;overflow:hidden;margin:18px 0 12px}
 .hero:after{content:"$";position:absolute;right:12px;top:-26px;font-size:150px;line-height:1;color:rgba(240,120,54,.08);font-weight:950;pointer-events:none}
 .hero .count{font-size:55px;font-weight:900;letter-spacing:-3px;margin:7px 0 0}.hero .count small{font-size:13px;letter-spacing:1px;color:var(--muted);font-weight:700}
@@ -29,7 +30,7 @@ h1{font-size:29px;line-height:1.08;letter-spacing:-1.1px;margin:9px 0 5px}.sub{f
 .entry{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.entry:last-child{border:0}.canicon{width:42px;height:48px;border-radius:10px;background:#343438;display:grid;place-items:center;color:var(--orange);font-size:18px;font-weight:900}
 .entrymain{flex:1;min-width:0}.entryname{font-weight:750;font-size:13px}.entrymeta{color:var(--muted);font-size:11px;margin-top:4px}.entryprice{font-size:13px;font-weight:800}
 .empty{text-align:center;padding:26px 10px;color:var(--muted);font-size:13px;line-height:1.6}
-.nav{position:fixed;z-index:5;bottom:0;left:50%;transform:translateX(-50%);width:min(480px,100%);padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:#1d1d20ed;backdrop-filter:blur(18px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.nav{position:fixed;z-index:5;bottom:0;left:50%;transform:translateX(-50%);width:min(480px,100%);padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:#1d1d20ed;backdrop-filter:blur(18px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
 .nav button{border:0;background:none;color:var(--muted);padding:8px 2px;border-radius:12px;font-size:10px;font-weight:700}.nav button b{display:block;font-size:18px;margin-bottom:4px}.nav button.active{background:#33271f;color:var(--orange)}
 .page{display:none}.page.active{display:block}
 .paneltitle{font-size:25px;letter-spacing:-.8px;margin:10px 0 5px}.muted{color:var(--muted)}
@@ -43,6 +44,7 @@ h1{font-size:29px;line-height:1.08;letter-spacing:-1.1px;margin:9px 0 5px}.sub{f
 .toast{position:fixed;bottom:90px;left:50%;transform:translate(-50%,15px);opacity:0;background:#eeeae5;color:#171719;padding:11px 16px;border-radius:30px;font-size:12px;font-weight:800;z-index:20;transition:.2s;pointer-events:none;white-space:nowrap}.toast.show{opacity:1;transform:translate(-50%,0)}
 .smallcaps{font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:800}
 /* ENERGY$ motion system */
+@keyframes messagePop{0%{transform:translateY(4px);opacity:.55}100%{transform:translateY(0);opacity:1}}.message-pop{animation:messagePop .32s ease both}
 @keyframes riseIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes popIn{0%{opacity:0;transform:scale(.96)}100%{opacity:1;transform:scale(1)}}
 @keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 #f0783600}50%{box-shadow:0 0 0 5px #f0783618}}
@@ -50,7 +52,7 @@ h1{font-size:29px;line-height:1.08;letter-spacing:-1.1px;margin:9px 0 5px}.sub{f
 .primary,.secondary,.nav button,.switch{transition:transform .18s ease,background .2s ease,filter .2s ease}.primary:active,.secondary:active{transform:scale(.975);filter:brightness(1.12)}
 .switch:after{transition:left .24s cubic-bezier(.2,.8,.2,1),background .2s ease,transform .2s ease}.switch.on{animation:pulseGlow .35s ease}
 .entry{animation:riseIn .24s ease both}.modal.open .sheet{animation:sheetIn .28s cubic-bezier(.2,.8,.2,1) both}@keyframes sheetIn{from{transform:translateY(35px);opacity:.6}to{transform:translateY(0);opacity:1}}
-.friend-card{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);animation:riseIn .25s ease both}.friend-card:last-child{border:0}.friend-avatar{width:42px;height:42px;border-radius:50%;background:#343438;color:var(--orange);display:grid;place-items:center;font-weight:900;overflow:hidden;flex:none}.friend-avatar img{width:100%;height:100%;object-fit:cover}.friend-info{flex:1;min-width:0}.friend-info strong{display:block;font-size:13px}.friend-info small{display:block;color:var(--muted);font-size:11px;margin-top:4px}.friend-actions{display:flex;gap:6px;align-items:center}.iconbtn{border:1px solid var(--line);background:#29292d;color:var(--text);border-radius:10px;padding:8px 10px;font-size:12px}.invite-url{font-size:11px;color:var(--orange);word-break:break-all;margin:10px 0;line-height:1.45}.social-loading{padding:18px;text-align:center;color:var(--muted);font-size:12px}.spinner{width:20px;height:20px;border:2px solid #555;border-top-color:var(--orange);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 9px}@keyframes spin{to{transform:rotate(360deg)}}
+
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 @media(min-width:600px){body{padding:22px 0}.app{border:1px solid #303034;border-radius:28px;min-height:calc(100vh - 44px);padding-bottom:35px}.nav{position:sticky;transform:none;left:auto;width:100%;border:1px solid var(--line);border-radius:16px;margin-top:20px;bottom:auto}.modal{align-items:center}.sheet{border-radius:24px}}
 
@@ -59,7 +61,7 @@ html{min-height:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-
 body{min-width:320px;overflow-x:hidden;overscroll-behavior-y:contain;min-height:100vh;min-height:100dvh}
 button{ -webkit-tap-highlight-color:transparent; touch-action:manipulation }
 .app{width:100%;min-width:0;min-height:100vh;min-height:100dvh}
-.page,.card,.stat,.hero,.listbox,.sectionhead,.entry,.friend-card{min-width:0}
+.page,.card,.stat,.hero,.listbox,.sectionhead,.entry
 @media(max-width:599px){
   body{padding:0}
   .app{max-width:480px;margin:0 auto;padding:calc(12px + env(safe-area-inset-top)) 16px calc(104px + env(safe-area-inset-bottom));}
@@ -90,7 +92,7 @@ button{ -webkit-tap-highlight-color:transparent; touch-action:manipulation }
   .field{margin:12px 0}
   .field input,.field select{font-size:16px;min-height:48px;padding:12px}
   .row{gap:8px}
-  .nav{left:0;right:0;bottom:0;transform:none;width:100%;max-width:480px;margin:0 auto;gap:3px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));border-radius:16px 16px 0 0;grid-template-columns:repeat(4,minmax(0,1fr));}
+  .nav{left:0;right:0;bottom:0;transform:none;width:100%;max-width:480px;margin:0 auto;gap:3px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));border-radius:16px 16px 0 0;grid-template-columns:repeat(3,minmax(0,1fr));}
   .nav button{min-width:0;min-height:58px;padding:7px 2px 5px;font-size:10px;line-height:1.15;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;white-space:nowrap}
   .nav button b{font-size:19px;line-height:1;margin:0}
   .modal{align-items:flex-end;padding:0}
@@ -103,11 +105,6 @@ button{ -webkit-tap-highlight-color:transparent; touch-action:manipulation }
   .switch{width:48px;height:28px;min-width:48px}
   .switch:after{width:22px;height:22px;left:3px;top:3px}
   .switch.on:after{left:23px}
-  .friend-card{flex-wrap:wrap;gap:9px;padding:13px 0}
-  .friend-avatar{width:40px;height:40px}
-  .friend-info{flex:1 1 calc(100% - 60px);min-width:0}
-  .friend-actions{width:100%;padding-left:49px;justify-content:flex-start}
-  .friend-actions .iconbtn{flex:1}
   .invite-url{font-size:12px;overflow-wrap:anywhere;word-break:break-word;line-height:1.5}
   .notice{font-size:12px;line-height:1.55;padding:13px}
   .toast{bottom:calc(84px + env(safe-area-inset-bottom));max-width:calc(100vw - 28px);white-space:normal;text-align:center;line-height:1.35}
@@ -137,7 +134,7 @@ button{ -webkit-tap-highlight-color:transparent; touch-action:manipulation }
 .nav{
   position:fixed;z-index:30;left:50%;right:auto;bottom:calc(9px + env(safe-area-inset-bottom));
   transform:translateX(-50%);width:min(448px,calc(100% - 28px));max-width:448px;
-  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;
   padding:7px;border:1px solid rgba(255,255,255,.16);border-radius:27px;
   background:linear-gradient(145deg,rgba(75,75,80,.48),rgba(30,30,34,.76));
   -webkit-backdrop-filter:blur(28px) saturate(175%);backdrop-filter:blur(28px) saturate(175%);
@@ -206,6 +203,7 @@ body:after{
       <div class="eyebrow">Твой личный журнал</div>
       <h1>Ну что,<br>опять?</h1>
       <div class="sub" id="mood">Финансовая дисциплина вышла из чата.</div>
+      <div class="live-message" id="liveMessage" aria-live="polite"><span class="live-dot"></span><div><b>От приложения</b><p id="liveMessageText">Ну что, начинаем вести учёт. Бухгалтерия уже нервничает.</p></div></div>
       <div class="hero">
         <div class="eyebrow">Всего зафиксировано</div>
         <div class="count" id="totalCans">0 <small>БАНОК</small></div>
@@ -238,26 +236,6 @@ body:after{
       <div class="listbox" id="historyList"><div class="empty">История пока пустая.</div></div>
     </section>
 
-    <section class="page" id="friends">
-      <div class="eyebrow">Социальная бухгалтерия</div><h1 class="paneltitle">Друны</h1><div class="sub">Добавляй друнов и решай сам, чем делиться.</div>
-      <div class="card" style="margin-top:18px">
-        <div class="eyebrow">Твоя пригласительная ссылка</div>
-        <div style="font-size:13px;font-weight:750;margin:10px 0" id="inviteText">Создай ссылку и отправь её друну</div>
-        <div class="invite-url" id="inviteUrl" hidden></div>
-        <button class="primary" style="width:100%;margin-top:7px" id="inviteButton" onclick="createInvite()">＋ СОЗДАТЬ ПРИГЛАШЕНИЕ</button>
-      </div>
-      <div class="sectionhead"><h2>Твои друны <span class="muted" id="friendCount">· 0</span></h2><button class="textbtn" onclick="loadSocial(true)">Обновить ↻</button></div>
-      <div class="card" id="friendsList"><div class="social-loading">Открой ENERGY$ через Telegram, чтобы загрузить друзей.</div></div>
-      <div class="sectionhead"><h2>Доступ к статистике</h2></div>
-      <div class="card">
-        <div class="toggle"><div><strong>Показывать количество банок</strong><small>Друны смогут видеть общий счётчик</small></div><button class="switch" id="privacyCans" onclick="togglePrivacy('cans')"></button></div>
-        <div class="toggle"><div><strong>Показывать расходы</strong><small>Сколько денег ушло на напитки</small></div><button class="switch" id="privacyMoney" onclick="togglePrivacy('money')"></button></div>
-        <div class="toggle"><div><strong>Показывать историю</strong><small>Отдельные записи и напитки</small></div><button class="switch" id="privacyHistory" onclick="togglePrivacy('history')"></button></div>
-        <div class="toggle"><div><strong>Участвовать в рейтингах</strong><small>Только если захочешь сравниваться</small></div><button class="switch" id="privacyRank" onclick="togglePrivacy('rank')"></button></div>
-      </div>
-      <div class="notice" id="socialStatus">Приватность и список друнов синхронизируются с твоим Telegram-профилем. Ты сам выбираешь, что показывать.</div>
-    </section>
-
     <section class="page" id="settings">
       <div class="eyebrow">Настройки</div><h1 class="paneltitle">Профиль</h1><div class="sub">Тут всё под твоим контролем.</div>
       <div class="card" style="margin-top:18px">
@@ -270,10 +248,10 @@ body:after{
         <button class="secondary" style="width:100%;margin-bottom:9px" onclick="exportData()">Скачать резервную копию</button>
         <button class="secondary" style="width:100%;margin-bottom:9px" onclick="document.getElementById('restoreFile').click()">Восстановить из копии</button>
         <input id="restoreFile" type="file" accept=".json,application/json" hidden onchange="importDataFile(event)">
-        <div id="backupStatus" class="entrymeta" style="margin:5px 0 12px">Автосохранение включено · локальная копия + облако Telegram</div>
+        <div id="backupStatus" class="entrymeta" style="margin:5px 0 12px">Автосохранение включено · локальные копии + синхронизация Telegram</div>
         <button class="secondary" style="width:100%;color:#ff8a80" onclick="clearData()">Удалить все записи</button>
       </div>
-      <div class="notice">Профиль подтверждается через Telegram. Данные автоматически сохраняются на устройстве. В Telegram история дополнительно синхронизируется с облаком. Перед крупными обновлениями можно скачать резервную копию и восстановить её в любой версии ENERGY$.</div>
+      <div class="notice">Профиль подключается через Telegram. Записи автоматически сохраняются на устройстве и синхронизируются с облаком при успешном подключении. Перед обновлениями скачивай резервную копию.</div>
       <div class="smallcaps" style="margin:22px 2px">ENERGY$ · PERSONAL TRACKER</div>
     </section>
   </main>
@@ -282,7 +260,6 @@ body:after{
 <nav class="nav" aria-label="Основная навигация">
   <button class="active" data-page="home" onclick="go('home')" aria-label="Главная"><b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3.5 10 8.5-7 8.5 7v10a1 1 0 0 1-1 1h-5.2v-6.5h-4.6V21H4.5a1 1 0 0 1-1-1z"/></svg></b><span>Главная</span></button>
   <button data-page="history" onclick="go('history')" aria-label="История"><b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/><path d="M2.5 6h.01M2.5 12h.01M2.5 18h.01"/></svg></b><span>История</span></button>
-  <button data-page="friends" onclick="go('friends')" aria-label="Друны"><b><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M2.8 20v-1.2a6.2 6.2 0 0 1 12.4 0V20zM16 5.2a3.1 3.1 0 0 1 0 5.9M17.2 14a5 5 0 0 1 4 4.8V20h-3"/></svg></b><span>Друны</span></button>
   <button data-page="settings" onclick="go('settings')" aria-label="Профиль"><b><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.3"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg></b><span>Профиль</span></button>
 </nav>
 
@@ -298,8 +275,7 @@ body:after{
    <button class="primary" type="submit">СОХРАНИТЬ ЗАПИСЬ</button>
   </form>
  </div>
-</div>
-<div class="modal" id="friendModal" onclick="if(event.target===this)closeFriend()"><div class="sheet"><div class="sheethead"><h2 id="friendTitle">Профиль друна</h2><button class="close" onclick="closeFriend()">×</button></div><div id="friendDetails" class="social-loading"></div></div></div>
+</div></div>
 <div class="toast" id="toast"></div>
 <script>
 const KEY='energydollar_user_v1';
@@ -309,14 +285,14 @@ const META_KEY=KEY+'_meta';
 const DB_NAME='energydollar_resilience';
 const SUPABASE_URL='https://nrcnoxxemyihnhtpvenr.supabase.co';
 const SUPABASE_KEY='sb_publishable_H9DpmYgbYyAYXsWwwmelWQ_2vxKVkWL';
-const SOCIAL_ENDPOINT=SUPABASE_URL+'/functions/v1/social-api';
+const API_ENDPOINT=SUPABASE_URL+'/functions/v1/social-api';
 let tgUser=null, socialReady=false, inviteLink='', backupDb=null;
 const $=id=>document.getElementById(id);
 const fmt=n=>new Intl.NumberFormat('ru-RU',{maximumFractionDigits:2}).format(n);
 const dateISO=()=>new Date().toISOString().slice(0,10);
-const blankState=()=>({entries:[],name:'Мой профиль',privacy:{cans:false,money:false,history:false,rank:false},pendingDeletes:[],telegramUser:null});
+const blankState=()=>({entries:[],name:'Мой профиль',pendingDeletes:[],telegramUser:null});
 function validState(x){return !!x&&typeof x==='object'&&Array.isArray(x.entries)&&x.entries.every(e=>e&&typeof e==='object'&&e.id!==undefined&&e.date&&Number.isFinite(Number(e.quantity))&&Number.isFinite(Number(e.price)));}
-function normalizeState(x){const n=blankState();if(x&&typeof x==='object'){n.entries=Array.isArray(x.entries)?x.entries.filter(e=>e&&e.id!==undefined&&e.date).map(e=>({...e,id:e.id,quantity:Math.max(1,Number(e.quantity)||1),price:Math.max(0,Number(e.price)||0)})):[];n.name=typeof x.name==='string'?x.name:n.name;n.privacy={...n.privacy,...(x.privacy||{})};n.pendingDeletes=Array.isArray(x.pendingDeletes)?x.pendingDeletes.map(String):[];n.telegramUser=x.telegramUser||null;}return n;}
+function normalizeState(x){const n=blankState();if(x&&typeof x==='object'){n.entries=Array.isArray(x.entries)?x.entries.filter(e=>e&&e.id!==undefined&&e.date).map(e=>({...e,id:e.id,quantity:Math.max(1,Number(e.quantity)||1),price:Math.max(0,Number(e.price)||0)})):[];n.name=typeof x.name==='string'?x.name:n.name;n.pendingDeletes=Array.isArray(x.pendingDeletes)?x.pendingDeletes.map(String):[];n.telegramUser=x.telegramUser||null;}return n;}
 function openBackupDB(){return new Promise(resolve=>{if(!('indexedDB'in window)){resolve(null);return}const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains('snapshots'))db.createObjectStore('snapshots',{keyPath:'id',autoIncrement:true});};req.onsuccess=()=>resolve(req.result);req.onerror=()=>resolve(null);});}
 async function writeBackupSnapshot(raw){try{if(!backupDb)return;const tx=backupDb.transaction('snapshots','readwrite');tx.objectStore('snapshots').add({created_at:new Date().toISOString(),schema:APP_SCHEMA_VERSION,payload:raw});await new Promise((res,rej)=>{tx.oncomplete=res;tx.onerror=rej;});const trim=backupDb.transaction('snapshots','readwrite'),store=trim.objectStore('snapshots'),all=await new Promise((res,rej)=>{const r=store.getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=rej;});all.sort((a,b)=>b.id-a.id).slice(5).forEach(x=>store.delete(x.id));}catch(e){console.warn('Backup snapshot skipped',e)}}
 function readInitialState(){const candidates=[localStorage.getItem(KEY),localStorage.getItem('energydollar_test_v1'),localStorage.getItem(BACKUP_KEY)];for(const raw of candidates){if(!raw)continue;try{const parsed=JSON.parse(raw);const candidate=parsed?.payload&&parsed?.format==='ENERGY$-BACKUP'?parsed.payload:parsed;if(validState(candidate))return normalizeState(candidate);}catch(e){console.warn('Invalid local state candidate',e)}}return blankState();}
@@ -326,14 +302,14 @@ async function initializeResilience(){backupDb=await openBackupDB();const hadLoc
 function save(){const raw=JSON.stringify(state);try{const previous=localStorage.getItem(KEY);if(previous&&previous!==raw)localStorage.setItem(BACKUP_KEY,previous);localStorage.setItem(KEY,raw);localStorage.setItem(META_KEY,JSON.stringify({schema:APP_SCHEMA_VERSION,updatedAt:new Date().toISOString()}));}catch(e){toast('Память устройства заполнена. Скачай резервную копию.');console.error(e)}writeBackupSnapshot(raw);render();}
 
 function toast(s){let t=$('toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1900)}
-function go(page){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===page));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));if(page==='settings')$('nameInput').value=state.name;if(page==='friends'&&tgUser)loadSocial()}
+function go(page){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===page));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));if(page==='settings')$('nameInput').value=state.name;}
 function openAdd(){$('date').value=dateISO();$('addModal').classList.add('open')}
 function closeAdd(){$('addModal').classList.remove('open')}
-$('addForm').addEventListener('submit',e=>{e.preventDefault();let q=Number($('quantity').value),p=Number($('price').value);if(!q||q<1||p<0||!Number.isFinite(p)){toast('Проверь количество и цену');return}const item={id:Date.now(),brand:$('brand').value.trim(),volume:$('volume').value,quantity:q,price:p,date:$('date').value,note:$('note').value.trim()};state.entries.unshift(item);save();if(tgUser)socialRequest('sync_entries',{entries:[item]}).catch(e=>toast('Локально сохранено; облако: '+e.message));closeAdd();$('addForm').reset();toast('Запись сохранена. Финансы плачут.')});
+$('addForm').addEventListener('submit',e=>{e.preventDefault();let q=Number($('quantity').value),p=Number($('price').value);if(!q||q<1||p<0||!Number.isFinite(p)){toast('Проверь количество и цену');return}const item={id:Date.now(),brand:$('brand').value.trim(),volume:$('volume').value,quantity:q,price:p,date:$('date').value,note:$('note').value.trim()};state.entries.unshift(item);save();if(tgUser)apiRequest('sync_entries',{entries:[item]}).catch(e=>toast('Локально сохранено; облако: '+e.message));closeAdd();$('addForm').reset();showLiveMessage('added')});
 function delEntry(id){if(!confirm('Удалить эту запись?'))return;state.entries=state.entries.filter(x=>String(x.id)!==String(id));state.pendingDeletes=[...new Set([...(state.pendingDeletes||[]),String(id)])];save();if(tgUser)flushCloudChanges().catch(e=>toast('Удалено на устройстве; облако обновится при подключении'));toast('Запись удалена')}
 function entryHTML(e){return `<div class="entry"><div class="canicon">$</div><div class="entrymain"><div class="entryname">${esc(e.brand)}</div><div class="entrymeta">${e.volume} · ${e.quantity} шт. · ${new Date(e.date+'T12:00:00').toLocaleDateString('ru-RU')}${e.note?' · '+esc(e.note):''}</div></div><div style="text-align:right"><div class="entryprice">${fmt(e.price*e.quantity)} ₽</div><button class="textbtn" onclick="delEntry(${e.id})">Удалить</button></div></div>`}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function selectMonth(value){if(!/^\d{4}-\d{2}$/.test(value))return;selectedMonth=value;render()}
+function selectMonth(value){if(!/^\d{4}-\d{2}$/.test(value))return;selectedMonth=value;render();showMonthMessage()}
 function render(){let es=state.entries,total=es.reduce((a,e)=>a+e.quantity,0),spent=es.reduce((a,e)=>a+e.quantity*e.price,0),month=es.filter(e=>e.date.slice(0,7)===selectedMonth),week=es.filter(e=>(Date.now()-new Date(e.date+'T00:00:00').getTime())<7*864e5 && new Date(e.date+'T00:00:00').getTime()<=Date.now());
 $('totalCans').innerHTML=fmt(total)+' <small>БАНОК</small>';$('totalSpent').textContent=fmt(spent)+' ₽';$('avgPrice').textContent=total?fmt(spent/total)+' ₽':'—';$('monthPicker').value=selectedMonth;$('monthCans').textContent=month.reduce((a,e)=>a+e.quantity,0)+' за '+new Date(selectedMonth+'-01T12:00:00').toLocaleDateString('ru-RU',{month:'long'});$('monthSpendLabel').textContent='Расходы · '+new Date(selectedMonth+'-01T12:00:00').toLocaleDateString('ru-RU',{month:'long',year:'numeric'});$('monthSpendCount').textContent=fmt(month.reduce((a,e)=>a+e.quantity,0))+' энергетиков';$('weekCans').textContent=week.reduce((a,e)=>a+e.quantity,0)+' банок';$('statMonth').textContent=fmt(month.reduce((a,e)=>a+e.quantity*e.price,0))+' ₽';
 let brands={};es.forEach(e=>brands[e.brand]=(brands[e.brand]||0)+e.quantity);let top=Object.entries(brands).sort((a,b)=>b[1]-a[1])[0];$('topBrand').textContent=top?top[0]:'—';
@@ -341,21 +317,42 @@ $('recentList').innerHTML=es.length?es.slice(0,3).map(entryHTML).join(''):'<div 
 $('historyList').innerHTML=es.length?es.map(entryHTML).join(''):'<div class="empty">История пока пустая.</div>';
 $('brandList').innerHTML=top?Object.entries(brands).sort((a,b)=>b[1]-a[1]).map(([n,c])=>`<div class="entry"><div class="entrymain"><div class="entryname">${esc(n)}</div><div class="entrymeta">${c} банок</div></div><strong>${fmt(c/total*100)}%</strong></div>`).join(''):'<div class="empty">Данных пока нет.</div>';
 let days=[];for(let i=6;i>=0;i--){let d=new Date();d.setDate(d.getDate()-i);let iso=d.toISOString().slice(0,10);days.push({label:d.toLocaleDateString('ru-RU',{weekday:'short'}),n:es.filter(e=>e.date===iso).reduce((a,e)=>a+e.quantity,0)})}let max=Math.max(1,...days.map(x=>x.n));$('weekChart').innerHTML=days.map(d=>`<div class="barcol"><div class="bar" style="height:${Math.max(3,d.n/max*85)}px"></div><div class="barlabel">${d.label}<br>${d.n}</div></div>`).join('');
-$('username').textContent=state.name;$('avatar').textContent=(state.name.trim()[0]||'Г').toUpperCase();['cans','money','history','rank'].forEach(k=>$('privacy'+k[0].toUpperCase()+k.slice(1)).classList.toggle('on',!!state.privacy[k]));
+$('username').textContent=state.name;$('avatar').textContent=(state.name.trim()[0]||'Г').toUpperCase();
+}
+const liveLines={
+  added:['Ну всё, понеслась. Запись принята.','Банку записал. Совесть свободна.','Опять ты за своё 😂','Кассир уже узнаёт тебя по походке.','Финансовый отдел просил не смотреть ему в глаза.'],
+  spend:['Бля, а деньги-то настоящие были.','На эти деньги можно было нормально пожрать.','Финансовый отдел просил передать: хорош.','Деньги ушли красиво. Без свидетелей.'],
+  quiet:['Тут пока тихо. Даже холодильник расслабился.','Давно ничего не записывал. Или память подводит?','Сегодня без новых записей. Подозрительно спокойно.'],
+  normal:['Ну что, ведём учёт или опять надеемся на память?','Бухгалтерия открыта. Ответственность — по желанию.','Главное — записывать. Осуждать будем потом.']
+};
+let lastLiveLine='';
+function showMonthMessage(){
+ const rows=state.entries.filter(e=>String(e.date).slice(0,7)===selectedMonth);
+ const cans=rows.reduce((a,e)=>a+Number(e.quantity||0),0);
+ const spent=rows.reduce((a,e)=>a+Number(e.quantity||0)*Number(e.price||0),0);
+ const monthName=new Date(selectedMonth+'-01T12:00:00').toLocaleDateString('ru-RU',{month:'long'});
+ let line=!rows.length?`В ${monthName} пока пусто. Хоть где-то финансовая дисциплина.`:spent>=3000?`В ${monthName} улетело ${fmt(spent)} ₽. Бля, чек лучше не показывать.`:`В ${monthName} набралось ${cans} банок на ${fmt(spent)} ₽. Всё записано, отмазки не принимаются.`;
+ const node=$('liveMessageText');if(node)node.textContent=line;
+}
+function showLiveMessage(reason='normal'){
+ const es=state.entries||[], now=new Date(), monthKey=now.toISOString().slice(0,7);
+ const month=es.filter(e=>String(e.date).slice(0,7)===monthKey), monthSpend=month.reduce((a,e)=>a+Number(e.quantity||0)*Number(e.price||0),0);
+ let group=reason;
+ if(reason!=='added' && monthSpend>=3000) group='spend';
+ else if(reason!=='added' && !es.some(e=>e.date===dateISO())) group='quiet';
+ const lines=liveLines[group]||liveLines.normal;
+ let choices=lines.filter(x=>x!==lastLiveLine); if(!choices.length)choices=lines;
+ const line=choices[Math.floor(Math.random()*choices.length)]; lastLiveLine=line;
+ const node=$('liveMessageText'); if(node){node.textContent=line;const box=$('liveMessage');box.classList.remove('message-pop');void box.offsetWidth;box.classList.add('message-pop');}
+ if(reason==='added')toast(line);
 }
 function saveName(){state.name=$('nameInput').value.trim()||'Мой профиль';save();toast('Имя сохранено')}
-async function socialRequest(action,extra={}){if(!tgUser||!window.Telegram?.WebApp?.initData)throw new Error('Открой приложение через Telegram');const r=await fetch(SOCIAL_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},body:JSON.stringify({initData:window.Telegram.WebApp.initData,action,...extra})});const d=await r.json().catch(()=>({}));if(!r.ok||d.error)throw new Error(d.error||'Ошибка сервера');return d}
-async function togglePrivacy(k){const map={cans:'show_can_count',money:'show_spending',history:'show_history',rank:'show_in_leaderboard'};const next=!state.privacy[k];state.privacy[k]=next;render();try{await socialRequest('set_privacy',{key:k,value:next});toast('Приватность сохранена')}catch(e){state.privacy[k]=!next;render();toast(e.message)}}
-async function createInvite(){const b=$('inviteButton');b.disabled=true;b.textContent='СОЗДАЁМ ССЫЛКУ…';try{const d=await socialRequest('create_invite');inviteLink=d.link;$('inviteText').textContent='Ссылка готова. Отправь её другу:';$('inviteUrl').hidden=false;$('inviteUrl').textContent=inviteLink;b.textContent='КОПИРОВАТЬ ССЫЛКУ';b.onclick=copyInvite;await copyInvite();}catch(e){toast(e.message);b.textContent='＋ СОЗДАТЬ ПРИГЛАШЕНИЕ'}finally{b.disabled=false}}
-async function copyInvite(){if(!inviteLink){toast('Сначала создай приглашение');return}try{if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(inviteLink)}else{const t=document.createElement('textarea');t.value=inviteLink;document.body.append(t);t.select();document.execCommand('copy');t.remove()}toast('Настоящая ссылка скопирована')}catch(e){toast('Не удалось скопировать ссылку')}}
-async function loadSocial(force=false){if(!tgUser)return;const box=$('friendsList');if(force)box.innerHTML='<div class="social-loading"><div class="spinner"></div>Обновляем список…</div>';try{const d=await socialRequest('get_social');socialReady=true;const p=d.privacy||{};state.privacy={cans:!!p.show_can_count,money:!!p.show_spending,history:!!p.show_history,rank:!!p.show_in_leaderboard};render();$('friendCount').textContent='· '+d.friends.length;box.innerHTML=d.friends.length?d.friends.map(f=>`<div class="friend-card"><div class="friend-avatar">${f.photo_url?`<img src="${esc(f.photo_url)}" alt="">`:esc((f.name||'?')[0])}</div><div class="friend-info"><strong>${esc(f.name)}</strong><small>${f.cans===null?'Количество скрыто':f.cans+' банок'} · ${f.spending===null?'расходы скрыты':fmt(f.spending)+' ₽'}</small></div><div class="friend-actions"><button class="iconbtn" onclick="openFriend('${f.id}','${esc(f.name).replace(/'/g,'&#39;')}')">Открыть</button><button class="iconbtn" onclick="removeFriend('${f.id}')">×</button></div></div>`).join(''):'<div class="empty">Пока друнов нет.<br>Создай приглашение и отправь ссылку.</div>';$('socialStatus').textContent='Настройки приватности сохранены в облаке. Друны видят только те данные, доступ к которым ты разрешил.';}catch(e){box.innerHTML=`<div class="empty">${esc(e.message)}<br>Попробуй обновить раздел.</div>`}}
-async function openFriend(id,name){$('friendTitle').textContent=name;$('friendDetails').innerHTML='<div class="spinner"></div>Загружаем доступную статистику…';$('friendModal').classList.add('open');try{const d=await socialRequest('friend_detail',{friend_id:id});let html='<div class="grid">';if(d.cans!==null)html+=`<div class="stat"><div class="eyebrow">Банок</div><div class="value">${fmt(d.cans)}</div></div>`;if(d.spending!==null)html+=`<div class="stat"><div class="eyebrow">Расходы</div><div class="value">${fmt(d.spending)} ₽</div></div>`;html+='</div>';if(d.permissions.show_history){html+='<div class="sectionhead"><h2>История</h2></div>';html+=d.entries.length?d.entries.map(e=>`<div class="entry"><div class="entrymain"><div class="entryname">${esc(e.brand)}</div><div class="entrymeta">${new Date(e.consumed_at).toLocaleDateString('ru-RU')} · ${e.quantity} шт.</div></div><strong>${e.unit_price===null?'':fmt(e.unit_price*e.quantity)+' ₽'}</strong></div>`).join(''):'<div class="empty">История пока пустая.</div>'}else html+='<div class="empty">Друн не открыл доступ к истории.</div>';$('friendDetails').innerHTML=html;}catch(e){$('friendDetails').textContent=e.message}}
-function closeFriend(){$('friendModal').classList.remove('open')}
-async function removeFriend(id){if(!confirm('Удалить этого друна?'))return;try{await socialRequest('remove_friend',{friend_id:id});toast('Друн удалён');loadSocial(true)}catch(e){toast(e.message)}}
+async function apiRequest(action,extra={}){if(!tgUser||!window.Telegram?.WebApp?.initData)throw new Error('Открой приложение через Telegram');const r=await fetch(API_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},body:JSON.stringify({initData:window.Telegram.WebApp.initData,action,...extra})});const d=await r.json().catch(()=>({}));if(!r.ok||d.error)throw new Error(d.error||'Ошибка сервера');return d}
+
 function exportData(){const backup={format:'ENERGY$-BACKUP',schemaVersion:APP_SCHEMA_VERSION,appVersion:'3.0.0',createdAt:new Date().toISOString(),telegramUser:state.telegramUser||null,payload:state};const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='ENERGY-dollar-backup-'+dateISO()+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('Резервная копия скачана')}
-function importDataFile(event){const file=event.target.files?.[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const data=JSON.parse(String(reader.result||''));const payload=data?.format==='ENERGY$-BACKUP'?data.payload:data;if(!validState(payload))throw new Error('Файл не похож на резервную копию ENERGY$');if(!confirm('Восстановить данные из копии? Текущие записи будут объединены, дубликаты не появятся.'))return;const incoming=normalizeState(payload),map=new Map(state.entries.map(e=>[String(e.id),e]));incoming.entries.forEach(e=>map.set(String(e.id),map.has(String(e.id))?map.get(String(e.id)):e));state.entries=[...map.values()].sort((a,b)=>String(b.date).localeCompare(String(a.date)));state.name=incoming.name||state.name;state.privacy={...state.privacy,...incoming.privacy};state.pendingDeletes=[...new Set([...(state.pendingDeletes||[]),...(incoming.pendingDeletes||[])])];save();if(tgUser)flushCloudChanges().catch(()=>toast('На устройстве восстановлено; облако синхронизируется позже'));toast('Данные восстановлены');}catch(e){toast(e.message||'Не удалось прочитать копию')}finally{event.target.value=''}};reader.readAsText(file)}
+function importDataFile(event){const file=event.target.files?.[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const data=JSON.parse(String(reader.result||''));const payload=data?.format==='ENERGY$-BACKUP'?data.payload:data;if(!validState(payload))throw new Error('Файл не похож на резервную копию ENERGY$');if(!confirm('Восстановить данные из копии? Текущие записи будут объединены, дубликаты не появятся.'))return;const incoming=normalizeState(payload),map=new Map(state.entries.map(e=>[String(e.id),e]));incoming.entries.forEach(e=>map.set(String(e.id),map.has(String(e.id))?map.get(String(e.id)):e));state.entries=[...map.values()].sort((a,b)=>String(b.date).localeCompare(String(a.date)));state.name=incoming.name||state.name;state.pendingDeletes=[...new Set([...(state.pendingDeletes||[]),...(incoming.pendingDeletes||[])])];save();if(tgUser)flushCloudChanges().catch(()=>toast('На устройстве восстановлено; облако синхронизируется позже'));toast('Данные восстановлены');}catch(e){toast(e.message||'Не удалось прочитать копию')}finally{event.target.value=''}};reader.readAsText(file)}
 function clearData(){if(!confirm('Точно удалить все записи? Это действие нельзя отменить. Сначала рекомендуется скачать резервную копию.'))return;state.pendingDeletes=[...new Set([...(state.pendingDeletes||[]),...state.entries.map(e=>String(e.id))])];state.entries=[];save();if(tgUser)flushCloudChanges().catch(()=>toast('Локально очищено; облако ещё не обновилось'));toast('Записи удалены')}
-async function flushCloudChanges(){if(!tgUser)return;for(const id of state.pendingDeletes||[])await socialRequest('delete_entry',{client_entry_id:id});state.pendingDeletes=[];save();if(state.entries.length)await socialRequest('sync_entries',{entries:state.entries});}
+async function flushCloudChanges(){if(!tgUser)return;for(const id of state.pendingDeletes||[])await apiRequest('delete_entry',{client_entry_id:id});state.pendingDeletes=[];save();if(state.entries.length)await apiRequest('sync_entries',{entries:state.entries});}
 function mergeCloudEntries(rows){const map=new Map(state.entries.map(e=>[String(e.id),e]));const deleted=new Set((state.pendingDeletes||[]).map(String));(rows||[]).forEach(r=>{const id=String(r.client_entry_id||'');if(!id||deleted.has(id)||map.has(id))return;map.set(id,{id,brand:r.brand||r.product_name||'Напиток',volume:r.volume_ml?`${r.volume_ml} мл`:'Другой',quantity:Number(r.quantity)||1,price:Number(r.unit_price)||0,date:String(r.consumed_at||'').slice(0,10)||dateISO(),note:r.note||''});});state.entries=[...map.values()].sort((a,b)=>String(b.date).localeCompare(String(a.date)));save();}
 
 
@@ -396,16 +393,14 @@ async function connectTelegramProfile(){
     };
     save();
     // Restore cloud history first, merge by stable client IDs, then sync pending local changes.
-    try{const cloud=await socialRequest('get_social');mergeCloudEntries(cloud.ownEntries||[]);await flushCloudChanges();}catch(syncError){console.warn('Cloud restore deferred:',syncError);toast('Локальные данные сохранены; облачная синхронизация повторится позже')}
-    const startParam=tg.initDataUnsafe?.start_param||'';
-    if(startParam.startsWith('invite_')){const redeemed=await socialRequest('redeem_invite',{code:startParam});toast(redeemed.message||'Приглашение принято');try{tg.close()}catch{}}
-    if(document.getElementById('friends').classList.contains('active'))loadSocial(true);
+    try{const cloud=await apiRequest('get_social');mergeCloudEntries(cloud.ownEntries||[]);await flushCloudChanges();}catch(syncError){console.warn('Cloud restore deferred:',syncError);toast('Локальные данные сохранены; облачная синхронизация повторится позже')}
   }catch(error){
     console.error('ENERGY$ Telegram connection error:',error);
     toast('Ошибка соединения с сервером');
   }
 }
 render();
+showLiveMessage('normal');
 initializeResilience();
 connectTelegramProfile();
 </script>
